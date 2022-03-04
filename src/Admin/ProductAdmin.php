@@ -44,12 +44,11 @@ final class ProductAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            //->add('id')
+            ->add('id')
             ->add('name')
             ->add('description')
             ->add('price')
             ->add('image')
-            ->add('category')
             ;
     }
 
