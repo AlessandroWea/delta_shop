@@ -42,3 +42,17 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: admin, label: Product }
         public: true
+
+    admin.comment:
+        class: App\Admin\CommentAdmin
+        arguments: [~, App\Entity\Comment, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Comment }
+        public: true
+
+    admin.orders:
+        class: App\Admin\OrdersAdmin
+        arguments: [~, App\Entity\Orders, ~]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Orders }
+        public: true

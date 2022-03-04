@@ -10,17 +10,19 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 
-final class ProductAdmin extends AbstractAdmin
+final class OrdersAdmin extends AbstractAdmin
 {
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
         $filter
             ->add('id')
-            ->add('name')
-            ->add('description')
             ->add('price')
-            ->add('image')
+            ->add('quantity')
+            ->add('customer_name')
+            ->add('email')
+            ->add('phone')
+            ->add('created')
             ;
     }
 
@@ -28,10 +30,12 @@ final class ProductAdmin extends AbstractAdmin
     {
         $list
             ->add('id')
-            ->add('name')
-            ->add('description')
             ->add('price')
-            ->add('image')
+            ->add('quantity')
+            ->add('customer_name')
+            ->add('email')
+            ->add('phone')
+            ->add('created')
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
                     'show' => [],
@@ -44,11 +48,12 @@ final class ProductAdmin extends AbstractAdmin
     protected function configureFormFields(FormMapper $form): void
     {
         $form
-            ->add('name')
-            ->add('description')
             ->add('price')
-            ->add('image')
-            ->add('category')
+            ->add('quantity')
+            ->add('customer_name')
+            ->add('email')
+            ->add('phone')
+            ->add('created')
             ;
     }
 
@@ -56,10 +61,12 @@ final class ProductAdmin extends AbstractAdmin
     {
         $show
             ->add('id')
-            ->add('name')
-            ->add('description')
             ->add('price')
-            ->add('image')
+            ->add('quantity')
+            ->add('customer_name')
+            ->add('email')
+            ->add('phone')
+            ->add('created')
             ;
     }
 }
