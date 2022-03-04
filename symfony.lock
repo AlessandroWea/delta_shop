@@ -85,6 +85,21 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.7"
     },
+    "friendsofsymfony/user-bundle": {
+        "version": "v2.2.4"
+    },
+    "jms/metadata": {
+        "version": "2.6.1"
+    },
+    "jms/serializer": {
+        "version": "3.17.1"
+    },
+    "knplabs/knp-menu": {
+        "version": "v3.3.0"
+    },
+    "knplabs/knp-menu-bundle": {
+        "version": "v3.2.0"
+    },
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
@@ -114,6 +129,9 @@
     },
     "phpspec/prophecy": {
         "version": "v1.15.0"
+    },
+    "phpstan/phpdoc-parser": {
+        "version": "1.2.0"
     },
     "phpunit/php-code-coverage": {
         "version": "9.2.14"
@@ -215,6 +233,56 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "sonata-project/admin-bundle": {
+        "version": "3.107",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.64",
+            "ref": "9909a0cc9b4683a1d98be519a890375d3342a480"
+        },
+        "files": [
+            "config/packages/sonata_admin.yaml",
+            "config/routes/sonata_admin.yaml",
+            "src/Admin/.gitignore"
+        ]
+    },
+    "sonata-project/block-bundle": {
+        "version": "4.10.0"
+    },
+    "sonata-project/cache": {
+        "version": "2.2.0"
+    },
+    "sonata-project/datagrid-bundle": {
+        "version": "3.5.0"
+    },
+    "sonata-project/doctrine-extensions": {
+        "version": "1.16.0"
+    },
+    "sonata-project/doctrine-orm-admin-bundle": {
+        "version": "3.35.0"
+    },
+    "sonata-project/exporter": {
+        "version": "2.11.0"
+    },
+    "sonata-project/form-extensions": {
+        "version": "1.13",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.4",
+            "ref": "9c8a1e8ce2b1f215015ed16652c4ed18eb5867fd"
+        },
+        "files": [
+            "config/packages/sonata_form.yaml"
+        ]
+    },
+    "sonata-project/twig-extensions": {
+        "version": "1.9.1"
+    },
+    "sonata-project/user-bundle": {
+        "version": "4.15.0"
     },
     "symfony/asset": {
         "version": "v4.4.37"
@@ -409,6 +477,9 @@
             "tests/bootstrap.php"
         ]
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.25.0"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.25.0"
     },
@@ -459,6 +530,9 @@
             "config/routes.yaml"
         ]
     },
+    "symfony/security-acl": {
+        "version": "v3.3.1"
+    },
     "symfony/security-bundle": {
         "version": "4.4",
         "recipe": {
@@ -491,6 +565,12 @@
     },
     "symfony/stopwatch": {
         "version": "v4.4.38"
+    },
+    "symfony/string": {
+        "version": "v5.4.3"
+    },
+    "symfony/templating": {
+        "version": "v4.4.37"
     },
     "symfony/translation": {
         "version": "4.4",
@@ -569,6 +649,9 @@
     },
     "twig/extra-bundle": {
         "version": "v3.3.8"
+    },
+    "twig/string-extra": {
+        "version": "v3.3.5"
     },
     "twig/twig": {
         "version": "v3.3.8"
