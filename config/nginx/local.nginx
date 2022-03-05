@@ -1,6 +1,6 @@
 server {
-    server_name tester.my;
-    root /www/test3/public;
+    server_name delta.my;
+    root /www/deltashop/public;
 
     location / {
         try_files $uri /index.php$is_args$args;
@@ -21,6 +21,6 @@ server {
         return 404;
     }
 
-    error_log /var/log/nginx/test2_error.log;
-    access_log /var/log/nginx/test2_access.log;
+    error_log /var/log/nginx/deltashop_error.log;
+    access_log /var/log/nginx/deltashop_access.log;
 }

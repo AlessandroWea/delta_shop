@@ -18,21 +18,12 @@
 					<!-- Product main img -->
 					<div class="col-md-5 col-md-push-2">
 						<div id="product-main-img">
-							<div class="product-preview">
-								<img src="./img/product01.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="./img/product03.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="./img/product06.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="./img/product08.png" alt="">
-							</div>
+							{% for image in product_images %}
+								<div class="product-preview">
+									<img src="{{ asset(image)}}" alt="">
+								</div>
+							{% endfor %}
+			
 						</div>
 					</div>
 					<!-- /Product main img -->
@@ -40,21 +31,11 @@
 					<!-- Product thumb imgs -->
 					<div class="col-md-2  col-md-pull-5">
 						<div id="product-imgs">
-							<div class="product-preview">
-								<img src="./img/product01.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="./img/product03.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="./img/product06.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="./img/product08.png" alt="">
-							</div>
+							{% for image in product_images %}
+								<div class="product-preview">
+									<img src="{{ asset(image)}}" alt="">
+								</div>
+							{% endfor %}
 						</div>
 					</div>
 					<!-- /Product thumb imgs -->
@@ -71,13 +52,13 @@
 									<i class="fa fa-star"></i>
 									<i class="fa fa-star-o"></i>
 								</div>
-								<a class="review-link" href="#">10 Review(s) | Add your review</a>
+								<a class="review-link" href="#">{{ comments|length }} Review(s) | Add your review</a>
 							</div>
 							<div>
-								<h3 class="product-price">$980.00 <del class="product-old-price">$990.00</del></h3>
+								<h3 class="product-price">{{ product.price }}$ <!-- <del class="product-old-price">$990.00</del> --></h3>
 								<span class="product-available">In Stock</span>
 							</div>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+							<p>{{ product.description }}</p>
 
 							<div class="add-to-cart">
 								<div class="qty-label">
@@ -93,8 +74,9 @@
 
 							<ul class="product-links">
 								<li>Category:</li>
-								<li><a href="#">Headphones</a></li>
-								<li><a href="#">Accessories</a></li>
+								{% for category in product_categories %}
+									<li><a href="{{ path('category', {'id' : category.id}) }}">{{ category.name }}</a></li>
+								{% endfor %}
 							</ul>
 
 						</div>
@@ -117,7 +99,7 @@
 								<div id="tab1" class="tab-pane fade in active">
 									<div class="row">
 										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+											<p>{{ product.description }}</p>
 										</div>
 									</div>
 								</div>
@@ -213,62 +195,33 @@
 										<div class="col-md-6">
 											<div id="reviews">
 												<ul class="reviews">
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
+													{% for comment in comments %}
+														<li>
+															<div class="review-heading">
+																<h5 class="name">{{ comment.name }}</h5>
+																<p class="date">{{ comment.created|date("m/d/Y") }}</p>
+																<div class="review-rating">
+																	{% for i in range(0, comment.rating - 1) %}
+																		<i class="fa fa-star"></i>
+																	{% endfor %}
+																	{% for i in range(0, 5 - comment.rating - 1) %}
+																		<i class="fa fa-star-o empty"></i>
+																	{% endfor %}
+																</div>
 															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
+															<div class="review-body">
+																<p>{{ comment.text }}</p>
 															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
-													<li>
-														<div class="review-heading">
-															<h5 class="name">John</h5>
-															<p class="date">27 DEC 2018, 8:0 PM</p>
-															<div class="review-rating">
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star"></i>
-																<i class="fa fa-star-o empty"></i>
-															</div>
-														</div>
-														<div class="review-body">
-															<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-														</div>
-													</li>
+														</li>
+													{% endfor %}
 												</ul>
-												<ul class="reviews-pagination">
+<!-- 												<ul class="reviews-pagination">
 													<li class="active">1</li>
 													<li><a href="#">2</a></li>
 													<li><a href="#">3</a></li>
 													<li><a href="#">4</a></li>
 													<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-												</ul>
+												</ul> -->
 											</div>
 										</div>
 										<!-- /Reviews -->

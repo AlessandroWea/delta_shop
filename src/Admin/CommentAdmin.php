@@ -48,6 +48,7 @@ final class CommentAdmin extends AbstractAdmin
             ->add('created')
             ->add('text')
             ->add('rating')
+            ->add('product')
             ;
     }
 
