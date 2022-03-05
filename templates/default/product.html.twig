@@ -8,6 +8,10 @@
 {% block nav %}
 {% endblock %}
 
+{% block breadcrumb %}
+    {% include('default/_breadcrumb.html.twig') %}
+{% endblock %}
+
 {% block section %}
 		<!-- SECTION -->
 		<div class="section">
@@ -46,11 +50,20 @@
 							<h2 class="product-name">{{ product.name }}</h2>
 							<div>
 								<div class="product-rating">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o"></i>
+									{% if average_rating != 0 %}
+										{% for i in range(0, floored_rating - 1) %}
+											<i class="fa fa-star"></i>
+										{% endfor %}
+										{% for i in range(0, 5 - floored_rating - 1) %}
+											<i class="fa fa-star-o"></i>
+										{% endfor %}
+									{% else %}
+											<i class="fa fa-star-o"></i>
+											<i class="fa fa-star-o"></i>
+											<i class="fa fa-star-o"></i>
+											<i class="fa fa-star-o"></i>
+											<i class="fa fa-star-o"></i>
+									{% endif %}
 								</div>
 								<a class="review-link" href="#">{{ comments|length }} Review(s) | Add your review</a>
 							</div>
@@ -111,13 +124,23 @@
 										<div class="col-md-3">
 											<div id="rating">
 												<div class="rating-avg">
-													<span>4.5</span>
+													<span>{{ average_rating }}</span>
 													<div class="rating-stars">
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star"></i>
-														<i class="fa fa-star-o"></i>
+														{% if average_rating != 0 %}
+															{% for i in range(0, floored_rating - 1) %}
+																<i class="fa fa-star"></i>
+															{% endfor %}
+															{% for i in range(0, 5 - floored_rating - 1) %}
+																<i class="fa fa-star-o"></i>
+															{% endfor %}
+														{% else %}
+																<i class="fa fa-star-o"></i>
+																<i class="fa fa-star-o"></i>
+																<i class="fa fa-star-o"></i>
+																<i class="fa fa-star-o"></i>
+																<i class="fa fa-star-o"></i>
+														{% endif %}
+
 													</div>
 												</div>
 												<ul class="rating">
@@ -130,9 +153,9 @@
 															<i class="fa fa-star"></i>
 														</div>
 														<div class="rating-progress">
-															<div style="width: 80%;"></div>
+															<div style="width: {{ rating_five_star_in_percents }}%;"></div>
 														</div>
-														<span class="sum">3</span>
+														<span class="sum">{{ count_of_comments_with_five_star }}</span>
 													</li>
 													<li>
 														<div class="rating-stars">
@@ -143,9 +166,9 @@
 															<i class="fa fa-star-o"></i>
 														</div>
 														<div class="rating-progress">
-															<div style="width: 60%;"></div>
+															<div style="width: {{ rating_four_star_in_percents }}%;"></div>
 														</div>
-														<span class="sum">2</span>
+														<span class="sum">{{ count_of_comments_with_four_star }}</span>
 													</li>
 													<li>
 														<div class="rating-stars">
@@ -156,9 +179,9 @@
 															<i class="fa fa-star-o"></i>
 														</div>
 														<div class="rating-progress">
-															<div></div>
+															<div style="width: {{ rating_three_star_in_percents }}%"></div>
 														</div>
-														<span class="sum">0</span>
+														<span class="sum">{{ count_of_comments_with_three_star }}</span>
 													</li>
 													<li>
 														<div class="rating-stars">
@@ -169,9 +192,9 @@
 															<i class="fa fa-star-o"></i>
 														</div>
 														<div class="rating-progress">
-															<div></div>
+															<div style="width: {{ rating_two_star_in_percents }}%"></div>
 														</div>
-														<span class="sum">0</span>
+														<span class="sum">{{ count_of_comments_with_two_star }}</span>
 													</li>
 													<li>
 														<div class="rating-stars">
@@ -182,9 +205,9 @@
 															<i class="fa fa-star-o"></i>
 														</div>
 														<div class="rating-progress">
-															<div></div>
+															<div style="width: {{ rating_one_star_in_percents }}%"></div>
 														</div>
-														<span class="sum">0</span>
+														<span class="sum">{{ count_of_comments_with_one_star }}</span>
 													</li>
 												</ul>
 											</div>

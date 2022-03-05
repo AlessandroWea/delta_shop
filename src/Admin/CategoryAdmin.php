@@ -39,6 +39,7 @@ final class CategoryAdmin extends AbstractAdmin
     {
         $form
             ->add('name')
+            ->add('Parent')
             ;
     }
 

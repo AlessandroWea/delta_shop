@@ -45,6 +45,33 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
+    public function getCommentsCountByRating(Product $entity, int $rating)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT COUNT(*) FROM product p
+            JOIN comment c ON c.product_id = p.id
+            WHERE p.id = :p_id AND c.rating = :rating
+        ';
+
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery(['p_id' => $entity->getId(), 'rating' => $rating]);
+
+        return $resultSet->fetchAllAssociative()[0]['COUNT(*)'];
+    }
+
+    public function getAllCategories(Product $entity)
+    {
+        $categories = array();
+        $category = $entity->getCategory();
+        do {
+            array_push($categories, $category);
+            $category = $category->getParent();
+        } while ($category !== null);
+
+        return $categories;
+    }
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
