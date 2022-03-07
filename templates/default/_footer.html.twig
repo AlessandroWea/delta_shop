@@ -13,9 +13,11 @@
                     <div class="footer">
                         <h3 class="footer-title">Categories</h3>
                         <ul class="footer-links">
-                            {% for category in top_categories %}
-                                <li><a href="{{ path('category', {id: category.id}) }}">{{ category.name }}</a></li>
-                            {% endfor %}
+                            {% if top_categories|length > 0 %}
+                                {% for category in top_categories %}
+                                    <li><a href="{{ path('category', {id: category.id}) }}">{{ category.name }}</a></li>
+                                {% endfor %}
+                            {% endif %}
                         </ul>
                     </div>
                 </div>

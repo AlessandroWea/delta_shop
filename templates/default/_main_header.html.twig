@@ -20,9 +20,11 @@
                         <form>
                             <select class="input-select">
                                 <option value="0">All Categories</option>
-                                {% for i in range(0, top_categories|length - 1) %}
-                                    <option value="{{ i+1 }}">{{ top_categories[i].name }}</option>
-                                {% endfor %}
+                                {% if top_categories|length > 0 %}
+                                    {% for i in range(0, top_categories|length - 1) %}
+                                        <option value="{{ i+1 }}">{{ top_categories[i].name }}</option>
+                                    {% endfor %}
+                                {% endif %}
                             </select>
                             <input class="input" placeholder="Search here">
                             <button class="search-btn">Search</button>
