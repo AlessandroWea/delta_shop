@@ -26,7 +26,9 @@ class DefaultController extends AbstractController
 
     public function homepage(): Response
     {
-        return $this->render('default/index.html.twig');
+        return $this->render('default/index.html.twig', [
+            'top_categories' => array(),
+        ]);
     }
 
     public function product(int $id, ManagerRegistry $doctrine, Utils $utils)
