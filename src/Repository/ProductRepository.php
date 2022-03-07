@@ -70,7 +70,8 @@ class ProductRepository extends ServiceEntityRepository
             $category = $category->getParent();
         } while ($category !== null);
 
-        return $categories;
+
+        return array_reverse($categories);
     }
     // /**
     //  * @return Product[] Returns an array of Product objects

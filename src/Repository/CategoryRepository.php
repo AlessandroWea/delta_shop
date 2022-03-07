@@ -45,6 +45,19 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAllParents(Category $entity) : array
+    {
+        $parents = array();
+        $parent = $entity->getParent();
+        while($parent !== null)
+        {
+            array_push($parents, $parent);
+            $parent = $parent->getParent();
+        }
+
+        return array_reverse($parents);
+    }
+
     // /**
     //  * @return Category[] Returns an array of Category objects
     //  */

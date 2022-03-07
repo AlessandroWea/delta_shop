@@ -42,7 +42,10 @@ class DefaultController extends AbstractController
         $comments = $comment_repository->findBy(['product' => $product]);
 
         $product_categories = $product_repository->getAllCategories($product);
+        $breadcrumbs = $utils->convertCategoriesIntoBreadcrumbs($product_categories);
 
+
+        //rating calculations
         $count_of_comments_with_one_star = $product_repository->getCommentsCountByRating($product, 1);
         $count_of_comments_with_two_star = $product_repository->getCommentsCountByRating($product, 2);
         $count_of_comments_with_three_star = $product_repository->getCommentsCountByRating($product, 3);
@@ -90,11 +93,27 @@ class DefaultController extends AbstractController
 
             'average_rating' => $average_rating,
             'floored_rating' => $floored_rating,
+
+            'breadcrumbs' => $breadcrumbs,
+            'current_breadcrumb' => $product->getName(),
         ]);
     }
 
-    public function category($id)
+    public function category(int $id, ManagerRegistry $doctrine, Utils $utils)
     {
-        die("Here will be a category page soon of id = $id");
+        $category_repository = $doctrine->getRepository(Category::class);
+
+        $current_category = $category_repository->find($id);
+        if($current_category === null)
+            die("Category with id = $id was not found!");
+
+        $parents_of_current_category = $category_repository->getAllParents($current_category);
+
+        $breadcrumbs = $utils->convertCategoriesIntoBreadcrumbs($parents_of_current_category);
+
+        return $this->render('default/category.html.twig', [
+            'breadcrumbs' => $breadcrumbs,
+            'current_breadcrumb' => $current_category->getName(),
+        ]);
     }
 }
