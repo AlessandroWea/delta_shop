@@ -7,3 +7,5 @@ product:
 category:
    path: /category/{id}
    controller: App\Controller\DefaultController::category
+   defaults:
+      id: 0

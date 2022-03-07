@@ -34,16 +34,19 @@ class DefaultController extends AbstractController
         // getting all the necessary repositories
         $product_repository = $doctrine->getRepository(Product::class);
         $comment_repository = $doctrine->getRepository(Comment::class);
+        $category_repository = $doctrine->getRepository(Category::class);
 
         $product = $product_repository->find($id);
         if($product === null)
             die('This product was not found!');
 
-        $comments = $comment_repository->findBy(['product' => $product]);
+        $comments = $product->getComments();
 
+        $top_categories = $category_repository->findBy(['Parent' => null]);
+
+        //making breadcrumbs
         $product_categories = $product_repository->getAllCategories($product);
         $breadcrumbs = $utils->convertCategoriesIntoBreadcrumbs($product_categories);
-
 
         //rating calculations
         $count_of_comments_with_one_star = $product_repository->getCommentsCountByRating($product, 1);
@@ -73,6 +76,7 @@ class DefaultController extends AbstractController
 
         $floored_rating = floor($average_rating);
 
+
         return $this->render('default/product.html.twig', [
             'product' => $product,
             'comments' => $comments,
@@ -94,6 +98,8 @@ class DefaultController extends AbstractController
             'average_rating' => $average_rating,
             'floored_rating' => $floored_rating,
 
+            'top_categories' => $top_categories,
+
             'breadcrumbs' => $breadcrumbs,
             'current_breadcrumb' => $product->getName(),
         ]);
@@ -101,19 +107,56 @@ class DefaultController extends AbstractController
 
     public function category(int $id, ManagerRegistry $doctrine, Utils $utils)
     {
+        //getting all repositories
         $category_repository = $doctrine->getRepository(Category::class);
+        $product_repository = $doctrine->getRepository(Product::class);
 
+        //if category is not found -> display all products
         $current_category = $category_repository->find($id);
         if($current_category === null)
-            die("Category with id = $id was not found!");
+        {
+            $products = $product_repository->findAll();
 
-        $parents_of_current_category = $category_repository->getAllParents($current_category);
+            $breadcrumbs = array();
+            $current_breadcrumb = 'All categories';
+        }
+        else
+        {
+            $products = $current_category->getProducts();
 
-        $breadcrumbs = $utils->convertCategoriesIntoBreadcrumbs($parents_of_current_category);
+            $parents_of_current_category = $category_repository->getAllParents($current_category);
+            $breadcrumbs = $utils->convertCategoriesIntoBreadcrumbs($parents_of_current_category);
+
+            $current_breadcrumb = $current_category->getName();
+        }
+
+        $top_categories = $category_repository->findBy(['Parent' => null]);
+
+        //calculating ratings of every product
+        $product_ratings = array();
+        foreach($products as $product)
+        {
+            $count = count($product->getComments());
+            if($count === 0)
+                $average_rating = 0;
+            else
+                $average_rating = ($product_repository->getCommentsCountByRating($product, 1) * 1 +
+                                   $product_repository->getCommentsCountByRating($product, 2) * 2 +
+                                   $product_repository->getCommentsCountByRating($product, 3) * 3+
+                                   $product_repository->getCommentsCountByRating($product, 4) * 4+
+                                   $product_repository->getCommentsCountByRating($product, 5) * 5)/ $count;
+
+            array_push($product_ratings, floor($average_rating));
+        }
 
         return $this->render('default/category.html.twig', [
+            'top_categories' => $top_categories,
+
+            'products' => $products,
+            'product_ratings' => $product_ratings,
+
             'breadcrumbs' => $breadcrumbs,
-            'current_breadcrumb' => $current_category->getName(),
+            'current_breadcrumb' => $current_breadcrumb,
         ]);
     }
 }
