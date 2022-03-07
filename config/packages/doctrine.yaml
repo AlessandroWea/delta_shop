@@ -11,6 +11,7 @@ doctrine:
         auto_mapping: true
         mappings:
             SonataUserBundle: ~
+            SonataMediaBundle: ~
             FOSUserBundle: ~
             App:
                 is_bundle: false

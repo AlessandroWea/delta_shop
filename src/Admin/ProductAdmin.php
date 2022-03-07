@@ -9,6 +9,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\MediaBundle\Form\Type\MediaType;
 
 final class ProductAdmin extends AbstractAdmin
 {
@@ -20,7 +21,13 @@ final class ProductAdmin extends AbstractAdmin
             ->add('name')
             ->add('description')
             ->add('price')
-            ->add('image')
+            //->add('image')
+            ->add('Media', MediaType::class, [
+                'provider' => 'sonata.media.provider.image',
+                'context'  => 'product',
+                'required' => false,
+                'label'    => 'Изображение',
+            ])
             ;
     }
 

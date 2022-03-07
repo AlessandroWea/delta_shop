@@ -10,6 +10,16 @@ _Использует фреймворк [https://symfony.com] версии 4.4_
 git clone git@github.com:AlessandroWea/delta_shop.git
 `
 
+- Создайте файл .env.local
+
+
+- Пропишите строку в фале .env.local
+  <code>
+  DATABASE_URL="mysql://root:@127.0.0.1:3306/delta_shop?serverVersion=8.0&charset=utf8mb4"
+  </code>
+
+
+
 - Установка зависимостей Composer
   
 `
@@ -30,15 +40,6 @@ npm run build
 
 
 ### Подключение к БД
-
-- Создайте файл .env.local
-
-
-- Пропишите строку в фале .env.local
-  <code>
-  DATABASE_URL="mysql://root:@127.0.0.1:3306/delta_shop?serverVersion=8.0&charset=utf8mb4"
-  </code>
-
 
 - Консольная команда для создания БД
 
