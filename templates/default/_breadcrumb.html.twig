@@ -1,15 +1,19 @@
-<div class="container">
-    <!-- row -->
-    <div class="row">
-        <div class="col-md-12">
-            <ul class="breadcrumb-tree">
-                <li><a href="{{ path('homepage') }}">Home</a></li>
-                {% for breadcrumb in breadcrumbs %}
-                    <li><a href="{{ path(breadcrumb.type, {'id' : breadcrumb.id}) }}">{{ breadcrumb.name }}</a></li>
-                {% endfor %}
-                <li class="active">{{ current_breadcrumb }}</li>
-            </ul>
+<div id="breadcrumb" class="section">
+
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="{{ path('homepage') }}">Home</a></li>
+                    {% for breadcrumb in breadcrumbs %}
+                        <li><a href="{{ path(breadcrumb.type, {'id' : breadcrumb.id}) }}">{{ breadcrumb.name }}</a></li>
+                    {% endfor %}
+                    <li class="active">{{ current_breadcrumb }}</li>
+                </ul>
+            </div>
         </div>
+        <!-- /row -->
     </div>
-    <!-- /row -->
+
 </div>

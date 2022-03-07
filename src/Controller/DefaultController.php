@@ -24,10 +24,14 @@ class DefaultController extends AbstractController
      * @throws Exception
      */
 
-    public function homepage(): Response
+    public function homepage(ManagerRegistry $doctrine): Response
     {
+        $category_repository = $doctrine->getRepository(Category::class);
+
+        $top_categories = $category_repository->findBy(['Parent' => null]);
+
         return $this->render('default/index.html.twig', [
-            'top_categories' => array(),
+            'top_categories' => $top_categories,
         ]);
     }
 
