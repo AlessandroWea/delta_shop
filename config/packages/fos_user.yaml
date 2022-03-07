@@ -1,13 +1,12 @@
 fos_user:
     db_driver: orm
     firewall_name: main
-    user_class: FOS\UserBundle\Entity\User
-    from_email:
-        address: "my@mail.com"
-        sender_name: "Name Surname"
+    user_class: App\Entity\SonataUserUser
     group:
-        group_class:   FOS\UserBundle\Entity\Group
+        group_class: App\Entity\SonataUserGroup
         group_manager: sonata.user.orm.group_manager
-framework:
-    templating:
-        engines: ['twig', 'php']
+    service:
+        user_manager: sonata.user.orm.user_manager
+    from_email:
+        address: "name@gmail.com"
+        sender_name: "name@gmail.com"

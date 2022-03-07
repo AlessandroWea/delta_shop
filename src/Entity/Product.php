@@ -50,10 +50,7 @@ class Product
      */
     private $comments;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Application\Sonata\MediaBundle\Entity\Media)
-     */
-    private $Media;
+
 
     /**
      * @ORM\OneToMany(targetEntity=ProductsToOrders::class, mappedBy="products")
