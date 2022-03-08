@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use App\Entity\Product;
 use App\Entity\Comment;
@@ -35,6 +36,8 @@ class DefaultController extends AbstractController
         ]);
     }
 
+
+
     public function product(int $id, ManagerRegistry $doctrine, Utils $utils)
     {
         // getting all the necessary repositories
@@ -44,7 +47,7 @@ class DefaultController extends AbstractController
 
         $product = $product_repository->find($id);
         if($product === null)
-            die('This product was not found!');
+            throw $this->createNotFoundException('The product does not exist');
 
         $comments = $product->getComments();
 
@@ -136,8 +139,6 @@ class DefaultController extends AbstractController
             $current_breadcrumb = $current_category->getName();
         }
 
-        $top_categories = $category_repository->findBy(['Parent' => null]);
-
         //calculating ratings of every product
         $product_ratings = array();
         foreach($products as $product)
@@ -156,14 +157,45 @@ class DefaultController extends AbstractController
         }
 
         return $this->render('default/category.html.twig', [
-            'top_categories' => $top_categories,
-
             'products' => $products,
             'product_ratings' => $product_ratings,
 
             'breadcrumbs' => $breadcrumbs,
             'current_breadcrumb' => $current_breadcrumb,
         ]);
+    }
+
+    public function searchBar(ManagerRegistry $doctrine)
+    {
+        $category_repository = $doctrine->getRepository(Category::class);
+
+        $categories = $category_repository->findBy(['Parent' => null]);
+
+        return $this->render('default/_search_bar.html.twig', [
+            'categories' => $categories,
+        ]);    
+    }
+
+    public function footer(ManagerRegistry $doctrine)
+    {
+        $category_repository = $doctrine->getRepository(Category::class);
+
+        $categories = $category_repository->findBy(['Parent' => null]);
+
+        return $this->render('default/_footer.html.twig', [
+            'categories' => $categories,
+        ]);    
+    }
+
+    public function topNavigation(ManagerRegistry $doctrine)
+    {
+        $category_repository = $doctrine->getRepository(Category::class);
+
+        $categories = $category_repository->findBy(['Parent' => null]);
+
+        return $this->render('default/_top_nav.html.twig', [
+            'categories' => $categories,
+        ]);    
     }
 
     

@@ -52,7 +52,9 @@
 
 <!-- NAVIGATION -->
 <nav id="navigation">
-    {% include('default/_top_nav.html.twig') %}
+    {{
+        render(controller('App\\Controller\\DefaultController::topNavigation'))
+    }}
 </nav>
 <!-- /NAV -->
 
@@ -70,7 +72,9 @@
 
 <!-- FOOTER -->
 <footer>
-    {% include('default/_footer.html.twig') %}
+    {{
+        render(controller('App\\Controller\\DefaultController::footer'))
+    }}
 </footer>
 <!-- /FOOTER -->
 
