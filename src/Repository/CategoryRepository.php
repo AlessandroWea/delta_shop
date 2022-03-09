@@ -58,6 +58,40 @@ class CategoryRepository extends ServiceEntityRepository
         return array_reverse($parents);
     }
 
+    private function _getAllLastSubCategoriesId(Category $entity)
+    {
+        $arr = '';
+
+        $children = $entity->getChildren();
+
+        foreach($children as $child)
+        {
+            if(count($child->getChildren()) === 0)
+                $arr .= $child->getId() . ';';
+            $arr .= $this->_getAllLastSubCategoriesId($child);
+        }
+
+
+        return $arr;
+    }
+
+    public function getAllLastSubCategoriesId(Category $entity)
+    {
+        if(count($entity->getChildren()) > 0)
+        {
+            $str_ids = $this->_getAllLastSubCategoriesId($entity);
+            $subs = explode(';',$str_ids);
+            array_pop($subs);    
+        }
+        else // if it doesn't have children -> this is the last sub itself
+        {
+            $subs = [$entity->getId()];
+        }
+
+
+        return $subs;
+    }
+
     // /**
     //  * @return Category[] Returns an array of Category objects
     //  */

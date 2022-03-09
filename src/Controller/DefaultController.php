@@ -27,12 +27,15 @@ class DefaultController extends AbstractController
 
     public function homepage(ManagerRegistry $doctrine): Response
     {
-        return $this->render('default/index.html.twig', [
+        $category_repository = $doctrine->getRepository(Category::class);
+        $product_repository = $doctrine->getRepository(Product::class);
 
+        $top_categories = $category_repository->findBy(['Parent' => null]);
+
+        return $this->render('default/index.html.twig', [
+            'categories' => $top_categories,
         ]);
     }
-
-
 
     public function product(int $id, ManagerRegistry $doctrine, Utils $utils)
     {
@@ -224,5 +227,60 @@ class DefaultController extends AbstractController
         ]);  
     }
 
+    public function productCart(Product $product, ManagerRegistry $doctrine)
+    {
+        return $this->render('default/_product_cart.html.twig', [
+            'product' => $product
+        ]);  
+    }
+
+    public function newProductsList(Category $category, ManagerRegistry $doctrine)
+    {
+        $category_repository = $doctrine->getRepository(Category::class);
+        $last_sub_categories = $category_repository->getAllLastSubCategoriesId($category);
+
+        $categories = [];
+
+        foreach($last_sub_categories as $cat)
+        {
+            $categories[] = $category_repository->find($cat);
+        }
+
+        $product_repository = $doctrine->getRepository(Product::class);
+        $products = $product_repository->getRecentProductsByCategories($categories);
+
+        return $this->render('default/_new_products_list.html.twig', [
+            'products' => $products
+        ]);  
+    }
+
+    public function newProductsSection(ManagerRegistry $doctrine)
+    {
+
+        $categories = $doctrine->getRepository(Category::class)->findBy(['Parent'=>null]);
+
+        return $this->render('default/_new_products_section.html.twig', [
+            'categories' => $categories,
+        ]);  
+    }
+
+    public function randomProductsSection(ManagerRegistry $doctrine)
+    {
+
+        $categories = $doctrine->getRepository(Category::class)->findBy(['Parent'=>null]);
+
+        return $this->render('default/_random_products_section.html.twig', [
+            'categories' => $categories,
+        ]);  
+    }
+
+    public function categoryListTabSwitchers(ManagerRegistry $doctrine)
+    {
+        $categories = $doctrine->getRepository(Category::class)->findBy(['Parent'=>null]);
+
+        return $this->render('default/_category_list_tab_switchers.html.twig', [
+            'categories' => $categories,
+        ]); 
+    }
     
 }

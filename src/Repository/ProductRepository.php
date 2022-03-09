@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -72,6 +73,24 @@ class ProductRepository extends ServiceEntityRepository
 
 
         return array_reverse($categories);
+    }
+
+    public function getRecentProductsByCategories(array $categories) : array
+    {
+        $entityManager = $this->getEntityManager();
+        $time = time() - (30 * 24 * 60 * 60);
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Category c
+           JOIN App\Entity\Product p
+            WHERE p.category IN (:cat) AND p.created >:time
+            '
+        )
+        ->setParameter('cat', $categories)
+        ->setParameter('time', $time);
+
+        // returns an array of Product objects
+        return $query->getResult();
     }
     // /**
     //  * @return Product[] Returns an array of Product objects

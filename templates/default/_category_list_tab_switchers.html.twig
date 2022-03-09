@@ -1,0 +1,7 @@
+{% for category in categories %}
+    {% if loop.first %}
+        <li class="active"><a data-toggle="tab" href="#tab{{ loop.index0 }}">{{ category.name }}</a></li>
+    {% else %}
+        <li><a data-toggle="tab" href="#tab{{ loop.index0 }}">{{ category.name }}</a></li>
+    {% endif %}
+{% endfor %}
