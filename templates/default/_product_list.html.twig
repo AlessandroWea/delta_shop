@@ -16,20 +16,9 @@
                     <!-- <del class="product-old-price">$990.00</del> -->
                 </h4>
                 <div class="product-rating">
-                    {% if product_ratings[i] != 0 %}
-                    {% for i in range(0, product_ratings[i] - 1) %}
-                        <i class="fa fa-star"></i>
-                    {% endfor %}
-                    {% for i in range(0, 5 - product_ratings[i] - 1) %}
-                        <i class="fa fa-star-o"></i>
-                    {% endfor %}
-                    {% else %}
-                        <i class="fa fa-star-o"></i>
-                        <i class="fa fa-star-o"></i>
-                        <i class="fa fa-star-o"></i>
-                        <i class="fa fa-star-o"></i>
-                        <i class="fa fa-star-o"></i>
-                    {% endif %}
+                    {{
+                        render(controller('App\\Controller\\DefaultController::productRatingShort', {'product': products[i]}))
+                    }}
                 </div>
                 <div class="product-btns">
                     <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span

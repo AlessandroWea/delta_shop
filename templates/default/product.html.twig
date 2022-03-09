@@ -50,22 +50,11 @@
 							<h2 class="product-name">{{ product.name }}</h2>
 							<div>
 								<div class="product-rating">
-									{% if average_rating != 0 %}
-										{% for i in range(0, floored_rating - 1) %}
-											<i class="fa fa-star"></i>
-										{% endfor %}
-										{% for i in range(0, 5 - floored_rating - 1) %}
-											<i class="fa fa-star-o"></i>
-										{% endfor %}
-									{% else %}
-											<i class="fa fa-star-o"></i>
-											<i class="fa fa-star-o"></i>
-											<i class="fa fa-star-o"></i>
-											<i class="fa fa-star-o"></i>
-											<i class="fa fa-star-o"></i>
-									{% endif %}
+									{{
+										render(controller('App\\Controller\\DefaultController::productRatingShort', {'product':product}))
+									}}
 								</div>
-								<a class="review-link" href="#">{{ comments|length }} Review(s) | Add your review</a>
+								<a class="review-link" data-toggle="tab" href="#tab3">{{ comments|length }} Review(s) | Add your review</a>
 							</div>
 							<div>
 								<h3 class="product-price">{{ product.price }}$ <!-- <del class="product-old-price">$990.00</del> --></h3>
@@ -121,154 +110,15 @@
 								<div id="tab3" class="tab-pane fade in">
 									<div class="row">
 										<!-- Rating -->
-										<div class="col-md-3">
-											<div id="rating">
-												<div class="rating-avg">
-													<span>{{ average_rating }}</span>
-													<div class="rating-stars">
-														{% if average_rating != 0 %}
-															{% for i in range(0, floored_rating - 1) %}
-																<i class="fa fa-star"></i>
-															{% endfor %}
-															{% for i in range(0, 5 - floored_rating - 1) %}
-																<i class="fa fa-star-o"></i>
-															{% endfor %}
-														{% else %}
-																<i class="fa fa-star-o"></i>
-																<i class="fa fa-star-o"></i>
-																<i class="fa fa-star-o"></i>
-																<i class="fa fa-star-o"></i>
-																<i class="fa fa-star-o"></i>
-														{% endif %}
-
-													</div>
-												</div>
-												<ul class="rating">
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-														</div>
-														<div class="rating-progress">
-															<div style="width: {{ rating_five_star_in_percents }}%;"></div>
-														</div>
-														<span class="sum">{{ count_of_comments_with_five_star }}</span>
-													</li>
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o"></i>
-														</div>
-														<div class="rating-progress">
-															<div style="width: {{ rating_four_star_in_percents }}%;"></div>
-														</div>
-														<span class="sum">{{ count_of_comments_with_four_star }}</span>
-													</li>
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-														</div>
-														<div class="rating-progress">
-															<div style="width: {{ rating_three_star_in_percents }}%"></div>
-														</div>
-														<span class="sum">{{ count_of_comments_with_three_star }}</span>
-													</li>
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-														</div>
-														<div class="rating-progress">
-															<div style="width: {{ rating_two_star_in_percents }}%"></div>
-														</div>
-														<span class="sum">{{ count_of_comments_with_two_star }}</span>
-													</li>
-													<li>
-														<div class="rating-stars">
-															<i class="fa fa-star"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-															<i class="fa fa-star-o"></i>
-														</div>
-														<div class="rating-progress">
-															<div style="width: {{ rating_one_star_in_percents }}%"></div>
-														</div>
-														<span class="sum">{{ count_of_comments_with_one_star }}</span>
-													</li>
-												</ul>
-											</div>
-										</div>
+										{% include('default/_rating_box.html.twig') %}
 										<!-- /Rating -->
 
 										<!-- Reviews -->
-										<div class="col-md-6">
-											<div id="reviews">
-												<ul class="reviews">
-													{% for comment in comments %}
-														<li>
-															<div class="review-heading">
-																<h5 class="name">{{ comment.name }}</h5>
-																<p class="date">{{ comment.created|date("m/d/Y") }}</p>
-																<div class="review-rating">
-																	{% for i in range(0, comment.rating - 1) %}
-																		<i class="fa fa-star"></i>
-																	{% endfor %}
-																	{% for i in range(0, 5 - comment.rating - 1) %}
-																		<i class="fa fa-star-o empty"></i>
-																	{% endfor %}
-																</div>
-															</div>
-															<div class="review-body">
-																<p>{{ comment.text }}</p>
-															</div>
-														</li>
-													{% endfor %}
-												</ul>
-<!-- 												<ul class="reviews-pagination">
-													<li class="active">1</li>
-													<li><a href="#">2</a></li>
-													<li><a href="#">3</a></li>
-													<li><a href="#">4</a></li>
-													<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-												</ul> -->
-											</div>
-										</div>
+										{% include('default/_comment_list.html.twig') %}
 										<!-- /Reviews -->
 
 										<!-- Review Form -->
-										<div class="col-md-3">
-											<div id="review-form">
-												<form class="review-form">
-													<input class="input" type="text" placeholder="Your Name">
-													<textarea class="input" placeholder="Your Comment"></textarea>
-													<div class="input-rating">
-														<span>Your Rating: </span>
-														<div class="stars">
-															<input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
-															<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
-															<input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
-															<input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
-															<input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
-														</div>
-													</div>
-													<button class="primary-btn">Submit</button>
-												</form>
-											</div>
-										</div>
+										{% include('default/_comment_form.html.twig') %}
 										<!-- /Review Form -->
 									</div>
 								</div>

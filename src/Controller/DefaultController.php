@@ -27,12 +27,8 @@ class DefaultController extends AbstractController
 
     public function homepage(ManagerRegistry $doctrine): Response
     {
-        $category_repository = $doctrine->getRepository(Category::class);
-
-        $top_categories = $category_repository->findBy(['Parent' => null]);
-
         return $this->render('default/index.html.twig', [
-            'top_categories' => $top_categories,
+
         ]);
     }
 
@@ -196,6 +192,36 @@ class DefaultController extends AbstractController
         return $this->render('default/_top_nav.html.twig', [
             'categories' => $categories,
         ]);    
+    }
+
+    public function productRatingShort(Product $product, ManagerRegistry $doctrine)
+    {
+        $product_repository = $doctrine->getRepository(Product::class);
+
+
+        $count = count($product->getComments());
+        if($count === 0)
+            $average_rating = 0;
+        else
+            $average_rating = ($product_repository->getCommentsCountByRating($product, 1) * 1 +
+                               $product_repository->getCommentsCountByRating($product, 2) * 2 +
+                               $product_repository->getCommentsCountByRating($product, 3) * 3+
+                               $product_repository->getCommentsCountByRating($product, 4) * 4+
+                               $product_repository->getCommentsCountByRating($product, 5) * 5)/ $count;
+
+
+        return $this->render('default/_rating_short.html.twig', [
+            'rating' => floor($average_rating)
+        ]);  
+    }
+
+    public function commentRatingShort(Comment $comment, ManagerRegistry $doctrine)
+    {
+        $rating = $comment->getRating();
+
+        return $this->render('default/_rating_short.html.twig', [
+            'rating' => $rating,
+        ]);  
     }
 
     
