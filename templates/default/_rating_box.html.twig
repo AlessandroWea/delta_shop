@@ -1,0 +1,79 @@
+<div class="col-md-3">
+	<div id="rating">
+		<div class="rating-avg">
+			<span>{{ average_rating }}</span>
+			<div class="rating-stars">
+				{{
+					render(controller('App\\Controller\\DefaultController::productRatingShort', {'product':product}))
+				}}
+			</div>
+		</div>
+		<ul class="rating">
+			<li>
+				<div class="rating-stars">
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+				</div>
+				<div class="rating-progress">
+					<div style="width: {{ rating_five_star_in_percents }}%;"></div>
+				</div>
+				<span class="sum">{{ count_of_comments_with_five_star }}</span>
+			</li>
+			<li>
+				<div class="rating-stars">
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star-o"></i>
+				</div>
+				<div class="rating-progress">
+					<div style="width: {{ rating_four_star_in_percents }}%;"></div>
+				</div>
+				<span class="sum">{{ count_of_comments_with_four_star }}</span>
+			</li>
+			<li>
+				<div class="rating-stars">
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star-o"></i>
+					<i class="fa fa-star-o"></i>
+				</div>
+				<div class="rating-progress">
+					<div style="width: {{ rating_three_star_in_percents }}%"></div>
+				</div>
+				<span class="sum">{{ count_of_comments_with_three_star }}</span>
+			</li>
+			<li>
+				<div class="rating-stars">
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star-o"></i>
+					<i class="fa fa-star-o"></i>
+					<i class="fa fa-star-o"></i>
+				</div>
+				<div class="rating-progress">
+					<div style="width: {{ rating_two_star_in_percents }}%"></div>
+				</div>
+				<span class="sum">{{ count_of_comments_with_two_star }}</span>
+			</li>
+			<li>
+				<div class="rating-stars">
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star-o"></i>
+					<i class="fa fa-star-o"></i>
+					<i class="fa fa-star-o"></i>
+					<i class="fa fa-star-o"></i>
+				</div>
+				<div class="rating-progress">
+					<div style="width: {{ rating_one_star_in_percents }}%"></div>
+				</div>
+				<span class="sum">{{ count_of_comments_with_one_star }}</span>
+			</li>
+		</ul>
+	</div>
+</div>

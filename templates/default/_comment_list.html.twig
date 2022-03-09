@@ -1,0 +1,29 @@
+<div class="col-md-6">
+	<div id="reviews">
+		<ul class="reviews">
+			{% for comment in comments %}
+				<li>
+					<div class="review-heading">
+						<h5 class="name">{{ comment.name }}</h5>
+						<p class="date">{{ comment.created|date("m/d/Y") }}</p>
+						<div class="review-rating">
+							{{
+								render(controller('App\\Controller\\DefaultController::commentRatingShort', {'comment':comment}))
+							}}
+						</div>
+					</div>
+					<div class="review-body">
+						<p>{{ comment.text }}</p>
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+<!-- 				<ul class="reviews-pagination">
+			<li class="active">1</li>
+			<li><a href="#">2</a></li>
+			<li><a href="#">3</a></li>
+			<li><a href="#">4</a></li>
+			<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+		</ul> -->
+	</div>
+</div>
