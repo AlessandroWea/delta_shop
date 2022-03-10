@@ -69,7 +69,6 @@ class ProductController extends AbstractController
             'product' => $product,
             'comments' => $comments,
             'product_categories' => $product_categories,
-            'product_images' => array($product->getImage()), //~_~ temporarily
 
             'count_of_comments_with_one_star' => $count_of_comments_with_one_star,
             'count_of_comments_with_two_star' => $count_of_comments_with_two_star,

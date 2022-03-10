@@ -22,12 +22,9 @@
 					<!-- Product main img -->
 					<div class="col-md-5 col-md-push-2">
 						<div id="product-main-img">
-							{% for image in product_images %}
 								<div class="product-preview">
-									<img src="{{ asset(image)}}" alt="">
+									<img src="{{ sonata_path(product.image, 'small') }}" alt="">
 								</div>
-							{% endfor %}
-			
 						</div>
 					</div>
 					<!-- /Product main img -->
@@ -35,11 +32,9 @@
 					<!-- Product thumb imgs -->
 					<div class="col-md-2  col-md-pull-5">
 						<div id="product-imgs">
-							{% for image in product_images %}
 								<div class="product-preview">
-									<img src="{{ asset(image)}}" alt="">
+									<img src="{{ sonata_path(product.image, 'small') }}" alt="">
 								</div>
-							{% endfor %}
 						</div>
 					</div>
 					<!-- /Product thumb imgs -->

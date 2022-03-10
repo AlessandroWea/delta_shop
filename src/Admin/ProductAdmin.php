@@ -22,12 +22,7 @@ final class ProductAdmin extends AbstractAdmin
             ->add('description')
             ->add('price')
             //->add('image')
-            ->add('Media', MediaType::class, [
-                'provider' => 'sonata.media.provider.image',
-                'context'  => 'product',
-                'required' => false,
-                'label'    => 'Изображение',
-            ])
+
             ;
     }
 
@@ -38,13 +33,18 @@ final class ProductAdmin extends AbstractAdmin
             ->add('name')
             ->add('description')
             ->add('price')
-            ->add('image')
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
                     'show' => [],
                     'edit' => [],
                     'delete' => [],
                 ],
+            ])
+            ->add('image', MediaType::class, [
+                'provider' => 'sonata.media.provider.image',
+                'context'  => 'product',
+                'required' => false,
+                'label'    => 'Изображение',
             ]);
     }
 
@@ -54,9 +54,13 @@ final class ProductAdmin extends AbstractAdmin
             ->add('name')
             ->add('description')
             ->add('price')
-            ->add('image')
             ->add('category')
-            ;
+            ->add('image', MediaType::class, [
+                'provider' => 'sonata.media.provider.image',
+                'context'  => 'product',
+                'required' => false,
+                'label'    => 'Изображение',
+            ]);
     }
 
     protected function configureShowFields(ShowMapper $show): void
@@ -66,7 +70,6 @@ final class ProductAdmin extends AbstractAdmin
             ->add('name')
             ->add('description')
             ->add('price')
-            ->add('image')
             ;
     }
 }

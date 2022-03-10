@@ -36,11 +36,6 @@ class Product
     private $price;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $image;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="products")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -62,6 +57,11 @@ class Product
      * @ORM\OneToMany(targetEntity=ProductsToOrders::class, mappedBy="products")
      */
     private $products;
+
+    /**
+     * @ORM\OneToOne(targetEntity=SonataMediaMedia::class, cascade={"persist", "remove"})
+     */
+    private $image;
 
     public function __construct()
     {
@@ -128,12 +128,12 @@ class Product
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getImage(): ?SonataMediaMedia
     {
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage(?SonataMediaMedia $image): self
     {
         $this->image = $image;
 

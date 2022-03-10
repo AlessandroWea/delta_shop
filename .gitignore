@@ -23,5 +23,5 @@
 ###< phpunit/phpunit ###
 
 #> sonata media
-#public/upload #dev disabled
+public/upload #dev disabled
 #< sonata media
