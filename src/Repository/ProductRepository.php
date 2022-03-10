@@ -8,7 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
-
+use DoctrineExtensions\Query\Mysql\Rand;
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
  * @method Product|null findOneBy(array $criteria, array $orderBy = null)
@@ -75,27 +75,65 @@ class ProductRepository extends ServiceEntityRepository
         return array_reverse($categories);
     }
 
-    public function getRecentProductsByCategories(array $categories) : array
+    public function getRecentProductsByCategories(array $categories, $limit = 1) : array
     {
         $entityManager = $this->getEntityManager();
-        $time = time() - (30 * 24 * 60 * 60);
         $query = $entityManager->createQuery(
             'SELECT p
-            FROM App\Entity\Category c
-           JOIN App\Entity\Product p
-            WHERE p.category IN (:cat) AND p.created >:time
+            FROM App\Entity\Product p
+            WHERE p.category IN (:cat)
+            ORDER BY p.created DESC
             '
         )
         ->setParameter('cat', $categories)
-        ->setParameter('time', $time);
-
+        ->setMaxResults($limit);
         // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    private function getRandomProductIdsByCategoryIds(array $category_ids, $limit = 1) : array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $cids = implode(',',$category_ids);
+
+        $sql = '
+            (SELECT p.id FROM product p
+            JOIN category c ON p.category_id = c.id
+            WHERE c.id IN (' . $cids . ')
+            ORDER BY RAND()) LIMIT ' . $limit;
+
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+        $set = $resultSet->fetchAllAssociative();
+        $product_ids = array();
+
+        foreach($set as $id)
+        {
+            array_push($product_ids, $id['id']);
+        }
+        return $product_ids;
+    }
+
+    public function getRandomProductsByCategoryIds(array $category_ids, $limit = 1) : array
+    {
+        $product_ids = $this->getRandomProductIdsByCategoryIds($category_ids, $limit);
+
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            WHERE p.id IN (:ids)
+            '
+        )
+        ->setParameter('ids', $product_ids);
+
         return $query->getResult();
     }
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
-    /*
+    
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('p')
@@ -107,7 +145,7 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Product

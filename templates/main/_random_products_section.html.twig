@@ -7,12 +7,16 @@
             <!-- section title -->
             <div class="col-md-12">
                 <div class="section-title">
-                    <h3 class="title">New Products</h3>
+                    <h3 class="title">You may like</h3>
                     <div class="section-nav">
                         <ul class="section-tab-nav tab-nav">
-                            {{
-                                render(controller('App\\Controller\\DefaultController::categoryListTabSwitchers'))
-                            }}
+                            {% for category in categories %}
+                                {% if loop.first %}
+                                    <li class="active"><a data-toggle="tab" href="#tabR{{ loop.index0 }}">{{ category.name }}</a></li>
+                                {% else %}
+                                    <li><a data-toggle="tab" href="#tabR{{ loop.index0 }}">{{ category.name }}</a></li>
+                                {% endif %}
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -25,10 +29,10 @@
                     <div class="products-tabs">
                         {% for category in categories %}
                             <!-- tab -->
-                            <div id="tab{{ loop.index0 }}" class="tab-pane {% if loop.index0 == 0%} active {% endif %}">
+                            <div id="tabR{{ loop.index0 }}" class="tab-pane {% if loop.index0 == 0%} active {% endif %}">
                                 <div class="products-slick" data-nav="#slick-nav-1">
                                     {{
-                                        render(controller('App\\Controller\\DefaultController::newProductsList', {'category': category}))
+                                        render(controller('App\\Controller\\MainController::randomProductsList', {'category': category}))
                                     }}
                                 </div>
                                 <div id="slick-nav-1" class="products-slick-nav"></div>
@@ -41,7 +45,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Products tab & slick -->
+            <!-- /Products tab & slick -->
         </div>
         <!-- /row -->
     </div>

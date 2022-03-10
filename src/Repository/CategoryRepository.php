@@ -58,7 +58,7 @@ class CategoryRepository extends ServiceEntityRepository
         return array_reverse($parents);
     }
 
-    private function _getAllLastSubCategoriesId(Category $entity)
+    private function _getAllLastSubCategoryIds(Category $entity)
     {
         $arr = '';
 
@@ -68,18 +68,18 @@ class CategoryRepository extends ServiceEntityRepository
         {
             if(count($child->getChildren()) === 0)
                 $arr .= $child->getId() . ';';
-            $arr .= $this->_getAllLastSubCategoriesId($child);
+            $arr .= $this->_getAllLastSubCategoryIds($child);
         }
 
 
         return $arr;
     }
 
-    public function getAllLastSubCategoriesId(Category $entity)
+    public function getAllLastSubCategoryIds(Category $entity)
     {
         if(count($entity->getChildren()) > 0)
         {
-            $str_ids = $this->_getAllLastSubCategoriesId($entity);
+            $str_ids = $this->_getAllLastSubCategoryIds($entity);
             $subs = explode(';',$str_ids);
             array_pop($subs);    
         }

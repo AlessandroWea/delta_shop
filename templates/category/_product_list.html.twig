@@ -2,7 +2,7 @@
 {% for i in range(0, products|length - 1) %}
 <div class="col-md-4 col-xs-6">
     {{
-        render(controller('App\\Controller\\DefaultController::productCart', {'product': products[i]}))
+        render(controller('App\\Controller\\ProductController::productCart', {'product': products[i]}))
     }}
 </div>
 {% endfor %}

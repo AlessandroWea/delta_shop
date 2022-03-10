@@ -1,10 +1,10 @@
 <div class="product">
         <div class="product-img">
             <img src="{{ asset(product.image) }}" alt="">
-            <div class="product-label">
+<!--             <div class="product-label">
                 <span class="sale">-30%</span>
                 <span class="new">NEW</span>
-            </div>
+            </div> -->
         </div>
         <div class="product-body">
             <p class="product-category">{{ product.category.name }}</p>
@@ -14,7 +14,7 @@
             </h4>
             <div class="product-rating">
                 {{
-                    render(controller('App\\Controller\\DefaultController::productRatingShort', {'product': product}))
+                    render(controller('App\\Controller\\ProductController::productRatingShort', {'product': product}))
                 }}
             </div>
             <div class="product-btns">

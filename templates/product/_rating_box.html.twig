@@ -4,7 +4,7 @@
 			<span>{{ average_rating }}</span>
 			<div class="rating-stars">
 				{{
-					render(controller('App\\Controller\\DefaultController::productRatingShort', {'product':product}))
+					render(controller('App\\Controller\\ProductController::productRatingShort', {'product':product}))
 				}}
 			</div>
 		</div>

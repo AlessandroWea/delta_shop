@@ -51,7 +51,7 @@
 							<div>
 								<div class="product-rating">
 									{{
-										render(controller('App\\Controller\\DefaultController::productRatingShort', {'product':product}))
+										render(controller('App\\Controller\\ProductController::productRatingShort', {'product':product}))
 									}}
 								</div>
 								<a class="review-link" data-toggle="tab" href="#tab3">{{ comments|length }} Review(s) | Add your review</a>
@@ -110,15 +110,15 @@
 								<div id="tab3" class="tab-pane fade in">
 									<div class="row">
 										<!-- Rating -->
-										{% include('default/_rating_box.html.twig') %}
+										{% include('product/_rating_box.html.twig') %}
 										<!-- /Rating -->
 
 										<!-- Reviews -->
-										{% include('default/_comment_list.html.twig') %}
+										{% include('product/_comment_list.html.twig') %}
 										<!-- /Reviews -->
 
 										<!-- Review Form -->
-										{% include('default/_comment_form.html.twig') %}
+										{% include('product/_comment_form.html.twig') %}
 										<!-- /Review Form -->
 									</div>
 								</div>
