@@ -62,6 +62,17 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    public function randomProductAsideList(ManagerRegistry $doctrine)
+    {
+        $product_repository = $doctrine->getRepository(Product::class);
+
+        $products = $product_repository->getRandomProducts(3);
+
+        return $this->render('category/_random_product_aside_list.html.twig', [
+            'products' => $products
+        ]);
+    }
+
     //$parents = top level category objects,
     //$activee = name of active category
     public function makeCatalog($parents, $active ,$level = 0)

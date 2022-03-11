@@ -9,6 +9,8 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use DoctrineExtensions\Query\Mysql\Rand;
+
+use Doctrine\ORM\Query\ResultSetMapping;
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
  * @method Product|null findOneBy(array $criteria, array $orderBy = null)
@@ -145,6 +147,37 @@ class ProductRepository extends ServiceEntityRepository
         ->setParameter('ids', $product_ids);
 
         return $query->getResult();
+    }
+
+    public function getRandomProducts($limit = 1) : array
+    {
+        $entityManager = $this->getEntityManager();
+
+        $conn = $entityManager->getConnection();
+
+        $sql = '(SELECT p.id FROM product p ORDER BY RAND()) LIMIT ' . $limit;
+        $stmt = $conn->prepare($sql);
+
+        $resultSet = $stmt->executeQuery();
+        $set = $resultSet->fetchAllAssociative();
+
+        $product_ids = array();
+
+        foreach($set as $id)
+        {
+            array_push($product_ids, $id['id']);
+        }
+
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            WHERE p.id IN (:ids)
+            '
+        )
+        ->setParameter('ids', $product_ids);
+
+        return $query->getResult();
+
     }
     // /**
     //  * @return Product[] Returns an array of Product objects
