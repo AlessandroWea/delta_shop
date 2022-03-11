@@ -92,6 +92,26 @@ class CategoryRepository extends ServiceEntityRepository
         return $subs;
     }
 
+    public function getAllLastSubCategories(Category $entity)
+    {
+        $sub_ids = $this->getAllLastSubCategoryIds($entity);
+        return $this->findByIds($sub_ids);
+    }
+
+    public function findByIds(Array $ids) : array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT c
+            FROM App\Entity\Category c
+            WHERE c.id IN (:ids)
+            '
+        )
+        ->setParameter('ids', $ids);
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
     // /**
     //  * @return Category[] Returns an array of Category objects
     //  */

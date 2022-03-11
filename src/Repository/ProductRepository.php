@@ -75,6 +75,22 @@ class ProductRepository extends ServiceEntityRepository
         return array_reverse($categories);
     }
 
+    public function getProductsByCategories(array $categories, $limit = 1)
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            WHERE p.category IN (:cat)
+            '
+        )
+        ->setParameter('cat', $categories)
+        ->setMaxResults($limit);
+        
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
     public function getRecentProductsByCategories(array $categories, $limit = 1) : array
     {
         $entityManager = $this->getEntityManager();
@@ -134,17 +150,17 @@ class ProductRepository extends ServiceEntityRepository
     //  * @return Product[] Returns an array of Product objects
     //  */
     
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
+    // public function findByExampleField($value)
+    // {
+    //     return $this->createQueryBuilder('p')
+    //         ->andWhere('p.exampleField = :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('p.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
     
 
     /*

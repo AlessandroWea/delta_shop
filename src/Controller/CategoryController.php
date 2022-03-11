@@ -23,6 +23,8 @@ class CategoryController extends AbstractController
         $category_repository = $doctrine->getRepository(Category::class);
         $product_repository = $doctrine->getRepository(Product::class);
 
+        $top_categories = $category_repository->findBy(['Parent'=>null]);
+
         //if category is not found -> display all products
         $current_category = $category_repository->find($id);
         if($current_category === null)
@@ -31,40 +33,58 @@ class CategoryController extends AbstractController
 
             $breadcrumbs = array();
             $current_breadcrumb = 'All categories';
+
+            $catalog = $this->makeCatalog($top_categories, '-');
+
         }
         else
         {
-            $products = $current_category->getProducts();
+            $subCategories = $category_repository->getAllLastSubCategoryIds($current_category);
+            $products = $product_repository->getRecentProductsByCategories($subCategories, 10);
 
             $parents_of_current_category = $category_repository->getAllParents($current_category);
             $breadcrumbs = $utils->convertCategoriesIntoBreadcrumbs($parents_of_current_category);
 
             $current_breadcrumb = $current_category->getName();
+
+            $catalog = $this->makeCatalog($top_categories, $current_category->getName());
+
         }
 
-        //calculating ratings of every product
-        $product_ratings = array();
-        foreach($products as $product)
-        {
-            $count = count($product->getComments());
-            if($count === 0)
-                $average_rating = 0;
-            else
-                $average_rating = ($product_repository->getCommentsCountByRating($product, 1) * 1 +
-                                   $product_repository->getCommentsCountByRating($product, 2) * 2 +
-                                   $product_repository->getCommentsCountByRating($product, 3) * 3+
-                                   $product_repository->getCommentsCountByRating($product, 4) * 4+
-                                   $product_repository->getCommentsCountByRating($product, 5) * 5)/ $count;
-
-            array_push($product_ratings, floor($average_rating));
-        }
 
         return $this->render('category/category.html.twig', [
             'products' => $products,
-            'product_ratings' => $product_ratings,
+
+            'catalog' => $catalog,
 
             'breadcrumbs' => $breadcrumbs,
             'current_breadcrumb' => $current_breadcrumb,
         ]);
+    }
+
+    //$parents = top level category objects,
+    //$activee = name of active category
+    public function makeCatalog($parents, $active ,$level = 0)
+    {
+        $html = "<ul class='catalog-$level'>";
+
+        foreach($parents as $parent)
+        {
+            if($parent->getName() === $active)
+                $html .= '<li class="active"><a href="' . $this->generateUrl('category', ['id' => $parent->getId()]) . '">' . $parent->getName() . '</a>';
+            else
+                $html .= '<li><a href="' . $this->generateUrl('category', ['id' => $parent->getId()]) . '">' . $parent->getName() . '</a>';
+
+            if(count($parent->getChildren()) !== 0)
+            {
+                $level++;
+                $html .= $this->makeCatalog($parent->getChildren(), $active, $level);
+            }
+
+            $html .= '</li>';
+        }
+
+        $html .= '</ul>';
+        return $html;
     }
 }
