@@ -55,7 +55,7 @@
 								<h3 class="product-price">{{ product.price }}$ <!-- <del class="product-old-price">$990.00</del> --></h3>
 								<span class="product-available">In Stock</span>
 							</div>
-							<p>{{ product.description }}</p>
+							<p>{{ product.description | raw }}</p>
 
 							<div class="add-to-cart">
 								<div class="qty-label">
@@ -96,7 +96,7 @@
 								<div id="tab1" class="tab-pane fade in active">
 									<div class="row">
 										<div class="col-md-12">
-											<p>{{ product.description }}</p>
+											<p>{{ product.description | raw }}</p>
 										</div>
 									</div>
 								</div>
