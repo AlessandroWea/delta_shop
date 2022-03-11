@@ -3,7 +3,7 @@
         <div id="responsive-nav">
             <!-- NAV -->
             <ul class="main-nav nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
+                <li class="active"><a href="{{ path('homepage') }}">Home</a></li>
                 {% if categories|length > 0 %}
                     {% for category in categories %}
                         <li><a href="{{ path('category', {id: category.id}) }}">{{ category.name }}</a></li>
