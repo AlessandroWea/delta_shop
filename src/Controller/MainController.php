@@ -41,7 +41,7 @@ class MainController extends AbstractController
         }
 
         $product_repository = $doctrine->getRepository(Product::class);
-        $products = $product_repository->getRecentProductsByCategories($categories, 6);
+        $products = $product_repository->getRecentProductsByCategories($categories, 0, 6);
 
         return $this->render('main/_products_list.html.twig', [
             'products' => $products

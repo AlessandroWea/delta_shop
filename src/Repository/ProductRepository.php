@@ -77,7 +77,7 @@ class ProductRepository extends ServiceEntityRepository
         return array_reverse($categories);
     }
 
-    public function getProductsByCategories(array $categories, $limit = 1)
+    public function getProductsByCategories(array $categories, $offset = 0 ,$limit = 1)
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
@@ -87,13 +87,14 @@ class ProductRepository extends ServiceEntityRepository
             '
         )
         ->setParameter('cat', $categories)
+        ->setFirstResult($offset)
         ->setMaxResults($limit);
         
         // returns an array of Product objects
         return $query->getResult();
     }
 
-    public function getRecentProductsByCategories(array $categories, $limit = 1) : array
+    public function getRecentProductsByCategories(array $categories, $offset = 0, $limit = 1) : array
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
@@ -104,6 +105,22 @@ class ProductRepository extends ServiceEntityRepository
             '
         )
         ->setParameter('cat', $categories)
+        ->setFirstResult($offset)
+        ->setMaxResults($limit);
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
+    public function getRecentProducts($offset, $limit = 1) : array
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM App\Entity\Product p
+            ORDER BY p.created DESC
+            '
+        )
+        ->setFirstResult($offset)
         ->setMaxResults($limit);
         // returns an array of Product objects
         return $query->getResult();
@@ -178,6 +195,38 @@ class ProductRepository extends ServiceEntityRepository
 
         return $query->getResult();
 
+    }
+
+    public function getAll($offset, $limit)
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT p FROM App\Entity\Product p'
+        )
+        ->setFirstResult($offset)
+        ->setMaxResults($limit);
+
+        return $query->getResult();
+    }
+
+    public function getCountOfAllProducts()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('count(p.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getCountOfProductsByCategoryIds(array $ids)
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT count(p) FROM App\Entity\Product p
+            WHERE p.category IN (:ids)'
+        )
+        ->setParameter('ids', $ids);
+
+        return $query->getSingleScalarResult();
     }
     // /**
     //  * @return Product[] Returns an array of Product objects

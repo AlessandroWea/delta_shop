@@ -30,7 +30,7 @@
         <div id="aside" class="col-md-3">
             <!-- aside Widget -->
             <div class="aside">
-                <h3 class="aside-title">Categories</h3>
+                <h3 class="aside-title"><a href="{{ path('category', {id: 0}) }}">Categories</a></h3>
                 <div class="catalog">
                     {{ catalog|raw}}
                 </div>
@@ -52,17 +52,27 @@
                 <div class="store-sort">
                     <label>
                         Sort By:
-                        <select class="input-select">
-                            <option value="0">Popular</option>
-                            <option value="1">Position</option>
+                        <select id="sort-select" class="input-select" onchange="location = this.value">
+                            {% for option in order_options %}
+                                {% if option == current_order %}
+                                    <option selected value="{{ current_order }}">{{ option }}</option>
+                                {% else %}
+                                    <option value="{{ path('category', {id : category_id, page : 1, orderBy : option, count : number_of_products_per_page}) }}">{{ option }}</option>
+                                {% endif %}
+                            {% endfor %}
                         </select>
                     </label>
 
                     <label>
                         Show:
-                        <select class="input-select">
-                            <option value="0">20</option>
-                            <option value="1">50</option>
+                        <select class="input-select" onchange="location = this.value">
+                            {% for option in count_options %}
+                                {% if option == number_of_products_per_page %}
+                                    <option selected value="{{ number_of_products_per_page }}">{{ option }}</option>
+                                {% else %}
+                                    <option value="{{ path('category', {id : category_id, page : 1, orderBy : current_order, count : option}) }}">{{ option }}</option>
+                                {% endif %}
+                            {% endfor %}
                         </select>
                     </label>
                 </div>
@@ -74,30 +84,53 @@
             <!-- /store top filter -->
 
             <!-- store products -->
-
             <div class="row">
-                <!-- product -->
                 {% include('category/_product_list.html.twig') %}
-
-                <!-- /product -->
-
-                <!-- /product -->
-
-
-                    <div class="clearfix visible-sm visible-xs"></div>
+                <div class="clearfix visible-sm visible-xs"></div>
                 <div class="clearfix visible-lg visible-md"></div>
             <!-- /store products -->
 
             <!-- store bottom filter -->
             <div class="store-filter clearfix">
                 {% if products|length > 0 %}
-                <span class="store-qty">Showing 20-100 products</span>
                 <ul class="store-pagination">
-                    <li class="active">1</li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
+                    {% if number_of_products > number_of_products_per_page %}
+                        {% if current_page > 1 %}
+                           <li style="width: 80px;"><a href="{{ path('category', {'id' : category_id, 'page' : 1}) }}">В начало</a></li>
+                        {% endif %}
+
+                        {% if number_of_pages - current_page > number_of_page_links-1 %}
+                            {% set initial = current_page - 1 %}
+                            {% if initial == 0 %}
+                                {% set initial = 1 %}
+                            {% endif %}
+                            {% for i in range(1,number_of_page_links ) %}
+                                {% if initial == current_page %}
+                                    <li class="active">{{ current_page }}</li>
+                                {% else %}
+                                    <li><a href="{{ path('category', {'id' : category_id, 'page' : initial, 'orderBy' : current_order, 'count' : number_of_products_per_page}) }}">{{ initial }}</a></li>
+                                {% endif %}
+                                {% set initial = initial + 1 %}
+                            {% endfor %}
+                        {% else %}
+                            {% set initial = number_of_pages - number_of_page_links + 1 %}
+                            {% if initial == 0 %}
+                                {% set initial = 1 %}
+                            {% endif %}
+                            {% for i in range(1,number_of_page_links ) %}
+                                {% if initial == current_page %}
+                                    <li class="active">{{ current_page }}</li>
+                                {% else %}
+                                    <li><a href="{{ path('category', {'id' : category_id, 'page' : initial, 'orderBy' : current_order, 'count' : number_of_products_per_page}) }}">{{ initial }}</a></li>
+                                {% endif %}
+                                {% set initial = initial + 1 %}
+                            {% endfor %}
+                        {% endif %}
+
+                        {% if current_page != number_of_pages %}
+                            <li><a href="{{ path('category', {'id' : category_id, 'page' : current_page+1}) }}"><i class="fa fa-angle-right"></i></a></li>
+                        {% endif %}
+                    {% endif %}
                 </ul>
                 {% endif %}
             </div>
@@ -107,7 +140,7 @@
     </div>
     <!-- /row -->
 </div>
+
 <!-- /container -->
 {% endblock %}
-
 
