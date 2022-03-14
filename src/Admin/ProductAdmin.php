@@ -10,6 +10,7 @@ use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\MediaBundle\Form\Type\MediaType;
+use Sonata\AdminBundle\Form\Type\AdminType;
 
 final class ProductAdmin extends AbstractAdmin
 {
@@ -64,7 +65,8 @@ final class ProductAdmin extends AbstractAdmin
                 'context'  => 'product',
                 'required' => false,
                 'label'    => 'Изображение',
-            ]);
+            ])
+            ->add('gallery', AdminType::class);
     }
 
     protected function configureShowFields(ShowMapper $show): void

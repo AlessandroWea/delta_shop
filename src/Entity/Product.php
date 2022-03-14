@@ -63,6 +63,12 @@ class Product
      */
     private $image;
 
+    /**
+     * @ORM\OneToOne(targetEntity=SonataMediaGallery::class, cascade={"persist", "remove"})
+     */
+    private $gallery;
+
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -208,6 +214,18 @@ class Product
                 $product->setProducts(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGallery(): ?SonataMediaGallery
+    {
+        return $this->gallery;
+    }
+
+    public function setGallery(?SonataMediaGallery $gallery): self
+    {
+        $this->gallery = $gallery;
 
         return $this;
     }

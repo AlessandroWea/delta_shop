@@ -29,5 +29,4 @@ return [
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     FOS\CKEditorBundle\FOSCKEditorBundle::class => ['all' => true],
     Pix\SortableBehaviorBundle\PixSortableBehaviorBundle::class => ['all' => true],
-    Sonata\jQueryBundle\SonatajQueryBundle::class => ['all' => true],
 ];

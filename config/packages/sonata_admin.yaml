@@ -7,10 +7,7 @@ sonata_admin:
         legacy_twig_text_extension: false
 
     assets:
-        javascripts:
-            - js/jquery.min.js
-            - bundles/pixsortablebehavior/js/jquery-ui.min.js
-            - bundles/pixsortablebehavior/js/init.js
+        extra_javascripts: ['bundles/pixsortablebehavior/js/jquery-ui.min.js', 'bundles/pixsortablebehavior/js/init.js']
 
 sonata_block:
     blocks:
