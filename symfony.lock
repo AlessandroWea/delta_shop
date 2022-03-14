@@ -203,6 +203,9 @@
             "tests/bootstrap.php"
         ]
     },
+    "pixassociates/sortable-behavior-bundle": {
+        "version": "v1.5"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -330,6 +333,9 @@
         "files": [
             "config/packages/sonata_form.yaml"
         ]
+    },
+    "sonata-project/jquery-bundle": {
+        "version": "1.10.2"
     },
     "sonata-project/media-bundle": {
         "version": "3.38",

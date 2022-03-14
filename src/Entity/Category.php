@@ -6,6 +6,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -39,6 +40,24 @@ class Category
      */
     private $products;
 
+    /**
+     * @Gedmo\SortablePosition
+     * @ORM\Column(name="position", type="integer")
+     */
+    private $position;
+
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
     public function __construct()
     {
         $this->Children = new ArrayCollection();
@@ -48,6 +67,21 @@ class Category
     public function __toString()
     {
         return $this->name ?? '-';
+    }
+
+    public function getLeveledName()
+    {
+        $level = 1;
+
+        $current = $this->getParent();
+
+        while($current != null)
+        {
+            $level++;
+            $current = $current->getParent();
+        }
+
+        return str_repeat('--- ', $level) . $this->name;
     }
 
     public function getId(): ?int

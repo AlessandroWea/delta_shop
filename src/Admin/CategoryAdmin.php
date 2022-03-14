@@ -9,9 +9,23 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Datagrid\DatagridInterface;
 
 final class CategoryAdmin extends AbstractAdmin
 {
+
+    protected function configureDefaultSortValues(array &$sortValues): void
+    {
+        $sortValues[DatagridInterface::PAGE] = 1;
+        $sortValues[DatagridInterface::SORT_ORDER] = 'ASC';
+        $sortValues[DatagridInterface::SORT_BY] = 'position';
+    }
+
+    protected function configureRoutes(RouteCollection $collection)
+    {
+        $collection->add('move', $this->getRouterIdParameter().'/move/{position}');
+    }
 
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
@@ -24,13 +38,18 @@ final class CategoryAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $list): void
     {
         $list
-            ->add('id')
-            ->add('name')
+            ->add('getLeveledName', null, [
+                'label' => 'Name',
+            ])
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
                     'show' => [],
                     'edit' => [],
                     'delete' => [],
+                    'move' => [
+                        'template' => 'PixSortableBehaviorBundle:Default:_sort_drag_drop.html.twig',
+                        'enable_top_bottom_buttons' => false
+                    ],
                 ],
             ]);
     }
