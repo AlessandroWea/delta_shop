@@ -17,6 +17,7 @@ use App\Utils\Utils;
 class ProductController extends AbstractController
 {
 
+    //Todo: split into multiple controllers
     public function product(int $id, ManagerRegistry $doctrine, Utils $utils)
     {
         // getting all the necessary repositories
@@ -64,11 +65,20 @@ class ProductController extends AbstractController
 
         $floored_rating = floor($average_rating);
 
+        $gallery = $product->getGallery()->getGalleryHasMedias();
+        $additional_images = [];
+
+        foreach($gallery as $g)
+        {
+            $additional_images[] = $g->getMedia();
+        }
 
         return $this->render('product/product.html.twig', [
             'product' => $product,
             'comments' => $comments,
             'product_categories' => $product_categories,
+
+            'additional_images' => $additional_images,
 
             'count_of_comments_with_one_star' => $count_of_comments_with_one_star,
             'count_of_comments_with_two_star' => $count_of_comments_with_two_star,

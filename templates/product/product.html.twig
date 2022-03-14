@@ -25,6 +25,11 @@
 								<div class="product-preview">
 									<img src="{{ sonata_path(product.image, 'small') }}" alt="">
 								</div>
+								{% for image in additional_images %}
+									<div class="product-preview">
+										<img src="{{ sonata_path(image, 'small') }}" alt="">
+									</div>
+								{% endfor %}
 						</div>
 					</div>
 					<!-- /Product main img -->
@@ -35,6 +40,11 @@
 								<div class="product-preview">
 									<img src="{{ sonata_path(product.image, 'small') }}" alt="">
 								</div>
+								{% for image in additional_images %}
+									<div class="product-preview">
+										<img src="{{ sonata_path(image, 'small') }}" alt="">
+									</div>
+								{% endfor %}
 						</div>
 					</div>
 					<!-- /Product thumb imgs -->

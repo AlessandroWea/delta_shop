@@ -11,13 +11,13 @@ sonata_media:
                 - sonata.media.provider.image
             formats:
                 small: { width: 200 , quality: 80}
-                big:   { width: 1600 , quality: 80}
+                big:   { width: 500 , quality: 70, resizer: sonata.media.resizer.square}
         product:
             providers:
                 - sonata.media.provider.image
             formats:
                 small:  { width: 200 , quality: 80 }
-                big:    { width: 1600 , quality: 80 }
+                big:   { width: 500 , quality: 70, resizer: sonata.media.resizer.square}
     cdn:
         server:
             path: /upload/media
