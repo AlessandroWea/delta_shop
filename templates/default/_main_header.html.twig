@@ -1,11 +1,17 @@
 <!-- HEADER -->
 <header>
     <!-- TOP HEADER -->
+    {% include('default/_flash_message.html.twig') %}
+
     <div id="top-header">
         <div class="container">
 
             <ul class="header-links pull-right">
-                <li><a href="http://delta.my/admin/login"><i class="fa fa-user-o"></i> My Account</a></li>
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <li><a href="#"><i class="fa fa-user-o"></i>My profile</a></li>
+                {% else %}
+                    <li><a href="{{ path('app_login') }}"><i class="fa fa-user-o"></i> Log in</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
