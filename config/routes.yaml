@@ -1,6 +1,9 @@
 homepage:
    path: /
    controller: App\Controller\MainController::homepage
+order:
+   path: /order
+   controller: App\Controller\OrderController::order
 product:
    path: /product/{id}
    controller: App\Controller\ProductController::product
@@ -9,6 +12,7 @@ category:
    controller: App\Controller\CategoryController::category
    defaults:
       id: 0
+
 
 sonata_user_admin_security:
    resource: '@SonataUserBundle/Resources/config/routing/admin_security.xml'
