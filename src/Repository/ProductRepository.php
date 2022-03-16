@@ -228,6 +228,78 @@ class ProductRepository extends ServiceEntityRepository
 
         return $query->getSingleScalarResult();
     }
+
+    public function search($query, $offset, $limit)
+    {
+        return $this->createQueryBuilder('p')
+                    ->where('p.name LIKE :query')
+                    ->setParameter('query', '%' . $query . '%')
+                    ->setFirstResult($offset)
+                    ->setMaxResults($limit)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    public function searchCount($query)
+    {
+        return $this->createQueryBuilder('p')
+                    ->select('count(p)')
+                    ->where('p.name LIKE :query')
+                    ->setParameter('query', '%' . $query . '%')
+                    ->getQuery()
+                    ->getSingleScalarResult();
+    }
+
+    public function searchNewest($query, $offset, $limit)
+    {
+        return $this->createQueryBuilder('p')
+                    ->where('p.name LIKE :query')
+                    ->setParameter('query', '%' . $query . '%')
+                    ->orderBy('p.created', 'DESC')
+                    ->setFirstResult($offset)
+                    ->setMaxResults($limit)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    public function searchByCategoryIds($query, $ids ,$offset, $limit)
+    {
+        return $this->createQueryBuilder('p')
+                    ->where('p.name LIKE :query')
+                    ->andWhere('p.category IN (:ids)')
+                    ->setParameter('query', '%' . $query . '%')
+                    ->setParameter('ids', $ids)
+                    ->setFirstResult($offset)
+                    ->setMaxResults($limit)
+                    ->getQuery()
+                    ->getResult();
+    }
+
+    public function searchCountByCategoryIds($query, $ids)
+    {
+        return $this->createQueryBuilder('p')
+                    ->select('count(p)')
+                    ->where('p.name LIKE :query')
+                    ->andWhere('p.category IN (:ids)')
+                    ->setParameter('query', '%' . $query . '%')
+                    ->setParameter('ids', $ids)
+                    ->getQuery()
+                    ->getSingleScalarResult();
+    }
+
+    public function searchNewestByCategoryIds($query, $ids, $offset, $limit)
+    {
+        return $this->createQueryBuilder('p')
+                    ->where('p.name LIKE :query')
+                    ->andWhere('p.category IN (:ids)')
+                    ->orderBy('p.created', 'DESC')
+                    ->setParameter('query', '%' . $query . '%')
+                    ->setParameter('ids', $ids)
+                    ->setFirstResult($offset)
+                    ->setMaxResults($limit)
+                    ->getQuery()
+                    ->getResult();
+    }
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

@@ -12,6 +12,9 @@ category:
    controller: App\Controller\CategoryController::category
    defaults:
       id: 0
+search:
+   path: /search
+   controller: App\Controller\SearchController::search
 
 
 sonata_user_admin_security:

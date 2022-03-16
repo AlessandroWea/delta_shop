@@ -35,7 +35,11 @@
 
                 <!-- SEARCH BAR -->
                 {{
-                    render(controller('App\\Controller\\DefaultController::searchBar'))
+                    render(controller('App\\Controller\\SearchController::searchBar',
+                    {
+                        'id' : app.request.query.get('category') ? app.request.query.get('category') : 0,
+                        'query' : app.request.query.get('q') ? app.request.query.get('q') : '',
+                    }))
                 }}
                 <!-- /SEARCH BAR -->
 

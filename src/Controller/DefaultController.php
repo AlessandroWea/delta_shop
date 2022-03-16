@@ -20,16 +20,7 @@ use App\Utils\Utils;
 
 class DefaultController extends AbstractController
 {
-    public function searchBar(ManagerRegistry $doctrine)
-    {
-        $category_repository = $doctrine->getRepository(Category::class);
 
-        $categories = $category_repository->findBy(['Parent' => null]);
-
-        return $this->render('default/_search_bar.html.twig', [
-            'categories' => $categories,
-        ]);    
-    }
 
     public function footer(ManagerRegistry $doctrine)
     {
@@ -72,5 +63,4 @@ class DefaultController extends AbstractController
             'categories' => $categories,
         ]); 
     }
-    
 }

@@ -8,26 +8,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Request;
+
 use App\Entity\Product;
 use App\Entity\Comment;
 use App\Entity\Category;
 
 use App\Utils\Utils;
+use App\Utils\PageSettings;
 
 class CategoryController extends AbstractController
 {
-
-    const DEFAULT_NUMBER_OF_PRODUCTS_ON_PAGE = 3;
-    const NUMBER_OF_RANDOM_PRODUCTS_IN_ASIDE_LIST = 3;
-    const NUMBER_OF_PAGE_LINKS = 4;
-
-    private $order_options = [
-        'Default', 'Newest'
-    ];
-
-    private $count_options = [
-        3,6,9,12,20
-    ];
 
     public function category(int $id, Request $request, ManagerRegistry $doctrine, Utils $utils)
     {
@@ -38,11 +28,15 @@ class CategoryController extends AbstractController
         // getting GET-variables from query
         $current_page = $request->query->get('page') ?? 1;
         $order = $request->query->get('orderBy') ?? 'Default';
-        $number_of_products_per_page = $request->query->get('count') ?? self::DEFAULT_NUMBER_OF_PRODUCTS_ON_PAGE;
+        $number_of_products_per_page = $request->query->get('count') ?? PageSettings::DEFAULT_NUMBER_OF_PRODUCTS_PER_PAGE;
 
+        $valid = PageSettings::validate([
+            'count_option' => $number_of_products_per_page,
+            'order_option' => $order,
+        ]);
+        
         // throw an exception if one of GET-variables is not valid
-        if(!in_array($number_of_products_per_page, $this->count_options) || !in_array($order, $this->order_options))
-            throw $this->createNotFoundException('The page does not exist');
+        if(!$valid) throw $this->createNotFoundException('The page does not exist');    
 
         $offset = $number_of_products_per_page * ($current_page - 1);
 
@@ -60,7 +54,6 @@ class CategoryController extends AbstractController
             }
 
             $number_of_products = $product_repository->getCountOfAllProducts();
-            $number_of_pages = (int)ceil($number_of_products / $number_of_products_per_page);
         }
         else // display products of particular category or categories
         {
@@ -76,9 +69,9 @@ class CategoryController extends AbstractController
             }
 
             $number_of_products = $product_repository->getCountOfProductsByCategoryIds($sub_category_ids);
-            $number_of_pages = (int)ceil($number_of_products / $number_of_products_per_page);
         }
         
+        $number_of_pages = (int)ceil($number_of_products / $number_of_products_per_page);
         if($number_of_pages == 0) $number_of_pages = 1;
 
         if($current_page > $number_of_pages)
@@ -98,12 +91,12 @@ class CategoryController extends AbstractController
 
             'catalog' => $catalog,
 
-            'number_of_page_links' => (self::NUMBER_OF_PAGE_LINKS > $number_of_pages) ? $number_of_pages : self::NUMBER_OF_PAGE_LINKS,
+            'number_of_page_links' => (PageSettings::NUMBER_OF_PAGE_LINKS > $number_of_pages) ? $number_of_pages : PageSettings::NUMBER_OF_PAGE_LINKS,
             'number_of_products_per_page' => $number_of_products_per_page,
             'number_of_pages' => $number_of_pages,
 
-            'count_options' => $this->count_options,
-            'order_options' => $this->order_options,
+            'count_options' => PageSetting::getCountOptions(),
+            'order_options' => PageSetting::getOrderOptions(),
 
             'current_page' => $current_page,
             'current_order' => $order,
@@ -117,7 +110,7 @@ class CategoryController extends AbstractController
     {
         $product_repository = $doctrine->getRepository(Product::class);
 
-        $products = $product_repository->getRandomProducts(self::NUMBER_OF_RANDOM_PRODUCTS_IN_ASIDE_LIST);
+        $products = $product_repository->getRandomProducts(PageSettings::NUMBER_OF_RANDOM_PRODUCTS_IN_ASIDE_LIST);
 
         return $this->render('category/_random_product_aside_list.html.twig', [
             'products' => $products
@@ -150,3 +143,7 @@ class CategoryController extends AbstractController
         return $html;
     }
 }
+
+
+
+

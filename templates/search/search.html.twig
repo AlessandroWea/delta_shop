@@ -8,40 +8,36 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    {% include('default/_breadcrumb.html.twig') %}
-    <!-- /container -->
-{% endblock %}
+<div id="breadcrumb" class="section">
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('catalog') }}
-{% endblock %}
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="{{ path('homepage') }}">Home</a></li>
+                    <li class="active">Search</li>
+                </ul>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
 
-{% block javascripts %}
-    {{ encore_entry_script_tags('catalog') }}
+</div>
 {% endblock %}
-
 
 {% block section %}
+
+
 <!-- container -->
 <div class="container">
     <!-- row -->
     <div class="row">
         <!-- ASIDE -->
         <div id="aside" class="col-md-3">
-            <!-- aside Widget -->
-            <div class="aside">
-                <h3 class="aside-title"><a href="{{ path('category', {id: 0}) }}">Categories</a></h3>
-                <div class="catalog">
-                    {{ catalog|raw}}
-                </div>
-            </div>
-            <!-- /aside Widget -->
-
-            <!-- aside Widget -->
             {{
                 render(controller('App\\Controller\\CategoryController::randomProductAsideList'))
             }}
-            <!-- /aside Widget -->
         </div>
         <!-- /ASIDE -->
 
@@ -57,7 +53,7 @@
                                 {% if option == current_order %}
                                     <option selected value="{{ current_order }}">{{ option }}</option>
                                 {% else %}
-                                    <option value="{{ path('category', {id : category_id, page : 1, orderBy : option, count : number_of_products_per_page}) }}">{{ option }}</option>
+                                    <option value="{{ path('search', {'q' : query, page : 1, orderBy : option, count : number_of_products_per_page}) }}">{{ option }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -70,7 +66,7 @@
                                 {% if option == number_of_products_per_page %}
                                     <option selected value="{{ number_of_products_per_page }}">{{ option }}</option>
                                 {% else %}
-                                    <option value="{{ path('category', {id : category_id, page : 1, orderBy : current_order, count : option}) }}">{{ option }}</option>
+                                    <option value="{{ path('search', {'q' : query, page : 1, orderBy : current_order, count : option}) }}">{{ option }}</option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -93,7 +89,7 @@
 
             <!-- store bottom filter -->
             <div class="store-filter clearfix">
-                {% include('category/_pagination.html.twig') %}
+                {% include('search/_pagination.html.twig') %}
             </div>
             <!-- /store bottom filter -->
         </div>
