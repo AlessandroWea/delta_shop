@@ -32,6 +32,7 @@ final class CommentAdmin extends AbstractAdmin
             ->add('created')
             ->add('text')
             ->add('rating')
+            ->add('product.name')
             ->add(ListMapper::NAME_ACTIONS, null, [
                 'actions' => [
                     'show' => [],

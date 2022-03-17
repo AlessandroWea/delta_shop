@@ -95,8 +95,8 @@ class CategoryController extends AbstractController
             'number_of_products_per_page' => $number_of_products_per_page,
             'number_of_pages' => $number_of_pages,
 
-            'count_options' => PageSetting::getCountOptions(),
-            'order_options' => PageSetting::getOrderOptions(),
+            'count_options' => PageSettings::getCountOptions(),
+            'order_options' => PageSettings::getOrderOptions(),
 
             'current_page' => $current_page,
             'current_order' => $order,

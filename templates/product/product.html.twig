@@ -123,7 +123,9 @@
 										<!-- /Reviews -->
 
 										<!-- Review Form -->
-										{% include('product/_comment_form.html.twig') %}
+										{{
+											render(controller('App\\Controller\\CommentController::commentForm', { 'id' : product.id }))
+										}}
 										<!-- /Review Form -->
 									</div>
 								</div>
