@@ -34,9 +34,14 @@ class CommentController extends AbstractController
         {
             $comment = $form->getData();
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($comment);
-            $entityManager->flush();
+            if($comment->getProduct())
+            {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($comment);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('product', ['id' => $comment->getProduct()->getId()]);
+            }
 
             return $this->redirectToRoute('homepage');
         }
