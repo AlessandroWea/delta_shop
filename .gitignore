@@ -23,7 +23,7 @@
 ###< phpunit/phpunit ###
 
 #> sonata media
-public/upload #dev disabled
+
 #< sonata media
 
 ###> symfony/webpack-encore-bundle ###
