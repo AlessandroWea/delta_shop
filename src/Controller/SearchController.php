@@ -29,7 +29,7 @@ class SearchController extends AbstractController
 
         $category_id = $request->query->get('category') ?? 0;
         $page = $request->query->get('page') ?? 1;
-        $order = $request->query->get('order') ?? 'Default';
+        $order = $request->query->get('orderBy') ?? 'Default';
         $number_of_products_per_page = $request->query->get('count') ?? PageSettings::DEFAULT_NUMBER_OF_PRODUCTS_PER_PAGE;
 
         $valid = PageSettings::validate([

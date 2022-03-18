@@ -51,3 +51,7 @@ bin/console doctrine:database:create
 
 `bin/console doctrine:schema:update --force
 `
+
+### Создание супер-админа
+
+bin/console fos:user:create --super-admin

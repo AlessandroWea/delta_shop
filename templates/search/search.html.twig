@@ -51,7 +51,7 @@
                         <select id="sort-select" class="input-select" onchange="location = this.value">
                             {% for option in order_options %}
                                 {% if option == current_order %}
-                                    <option selected value="{{ current_order }}">{{ option }}</option>
+                                    <option selected value="{{ current_order }}">{{ current_order }}</option>
                                 {% else %}
                                     <option value="{{ path('search', {'q' : query, page : 1, orderBy : option, count : number_of_products_per_page}) }}">{{ option }}</option>
                                 {% endif %}

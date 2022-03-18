@@ -31,8 +31,6 @@ class ProductController extends AbstractController
 
         $comments = $product->getComments();
 
-        $top_categories = $category_repository->findBy(['Parent' => null]);
-
         //making breadcrumbs
         $product_categories = $product_repository->getAllCategories($product);
         $breadcrumbs = $utils->convertCategoriesIntoBreadcrumbs($product_categories);
@@ -94,8 +92,6 @@ class ProductController extends AbstractController
 
             'average_rating' => $average_rating,
             'floored_rating' => $floored_rating,
-
-            'top_categories' => $top_categories,
 
             'breadcrumbs' => $breadcrumbs,
             'current_breadcrumb' => $product->getName(),
