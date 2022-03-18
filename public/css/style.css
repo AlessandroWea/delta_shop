@@ -1014,6 +1014,11 @@ textarea.input {
   transform: translate(-50%, -5px);
 }
 
+.cart{
+  height: 500px;
+  text-align: center;
+}
+
 .product .add-to-cart {
   position: absolute;
   left: 1px;

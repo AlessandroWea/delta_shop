@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Cart;
 use App\Entity\Product;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Repository\CartRepository;
@@ -54,7 +56,7 @@ class CartController extends AbstractController
      * @param CartRepository $cartRepository
      * @return Response
      */
-    public function shopCart(CartRepository $cartRepository): Response
+    public function cart(CartRepository $cartRepository): Response
     {
         $session = $this->session->getId();
         $items = $cartRepository->findBy(['sessionId' => $session]);
@@ -62,11 +64,41 @@ class CartController extends AbstractController
         return $this->render(
             'order/cart.html.twig',
             [
-                'title' => 'Корзина',
+                'title' => 'Cart',
                 'items' => $items,
             ]
         );
     }
 
 
+
+    /**
+     * @Route("/order", name="order")
+     * @param CartRepository $cartRepository
+     * @return Response
+     */
+
+    public function orderGetProduct(CartRepository $cartRepository): Response
+    {
+        $session = $this->session->getId();
+        $items = $cartRepository->findBy(['sessionId' => $session]);
+        return $this->render(
+            'order/order.html.twig',
+            [
+
+                'items' => $items,
+            ]
+        );
+
+    }
+
+    /**
+     * @Route("/cart/clear", name="cartClear")
+     */
+
+    public function cartClear() //Clear session
+    {
+        $this->session->migrate();
+        return $this->redirectToRoute('cart');
+    }
 }

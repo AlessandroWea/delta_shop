@@ -3,37 +3,73 @@
 {% block title %}Cart{% endblock %}
 
 {% block section %}
-    <style>
-        .itemClass {
-            text-decoration: none;
-            color: #222222;
-        }
-
-        .itemClass:hover {
-            text-decoration: none;
-            color: #222222;
-        }
-    </style>
-    <div class="example-wrapper">
-        <h1>{{ title }}</h1>
-        <hr>
-
-        {% set sum = 0 %}
-        {% for item in items %}
-            <div class="col-md-12">
-                <div class="card mb-12 shadow-sm">
-                    <div class="card-body">
-                        <h4>{{ item.product.name }}</h4>
-                        <p class="card-text">{{ item.product.description }}</p>
-                        <h5>{{ item.product.price }} руб</h5>
-                        {% set sum = sum + item.product.price %}
+    {% if items is empty %}
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col">
+                    <div class="cart">
+                        <h1>Your shopping cart is empty</h1>
                     </div>
                 </div>
             </div>
+        </div>
+    {% else %}
+        {% set count = 0 %}
+        {% set sum = 0 %}
+        {% for item in items %}
+            <!-- container -->
+
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <div class="col">
+                        <div class="product-img">
+                            <img src="{{ sonata_path(item.product.image, 'small') }}" alt="">
+                            <!--             <div class="product-label">
+                                            <span class="sale">-30%</span>
+                                            <span class="new">NEW</span>
+                                        </div> -->
+                        </div>
+                        <div class="product-body">
+                            <h3 class="product-name"><a
+                                        href="{{ path('product', {id: item.product.id}) }}">{{ item.product.name }}</a>
+                            </h3>
+                            <p>{{ item.product.description | raw }}</p>
+                            <h4 class="product-price">${{ item.product.price }}
+                                <!-- <del class="product-old-price">$990.00</del> -->
+                            </h4>
+                            <div class="product-rating">
+                                {{ render(controller('App\\Controller\\ProductController::productRatingShort', {'product': item.product})) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            {% set sum = sum + item.product.price %}
+            {% set count = count + item|length %}
         {% endfor %}
 
-        <hr>
-        <h4>Итого: {{ sum }}</h4>
-        <a href="{{ path('order') }}" class="float-right btn btn-success mt-2">Оформить заказ</a>
-    </div>
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <hr>
+                    <h3>Subtotal: ${{ sum }}</h3>
+                    <h4>Items selected: {{ count }}</h4>
+                    <a href="{{ path('order') }}" class="float-right btn btn-success mt-2">Place order</a>
+                    <button class="add-to-cart-btn"><a href="{{ path('cartClear')}}" ><i class="fa fa-shopping-cart"></i>Clear cart</a></button>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
 {% endblock %}
+
+
+
+
+
