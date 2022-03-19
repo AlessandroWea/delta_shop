@@ -72,3 +72,5 @@ security:
         # Change these rules to adapt them to your needs
         - { path: ^/admin/, role: [ROLE_ADMIN, ROLE_SONATA_ADMIN] }
         - { path: ^/.*, role: IS_AUTHENTICATED_ANONYMOUSLY }
+
+        - { path: ^/profile, role: ROLE_USER } # this doesnt work -_-

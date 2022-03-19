@@ -8,7 +8,7 @@
 
             <ul class="header-links pull-right">
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                    <li><a href="#"><i class="fa fa-user-o"></i>My profile</a></li>
+                    <li><a href="{{ path('profile') }}"><i class="fa fa-user-o"></i>My profile</a></li>
                 {% else %}
                     <li><a href="{{ path('app_login') }}"><i class="fa fa-user-o"></i> Log in</a></li>
                 {% endif %}
