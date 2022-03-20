@@ -105,26 +105,15 @@ class ProductController extends AbstractController
         ]);  
     }
 
-    public function productRatingShort(Product $product, ManagerRegistry $doctrine)
+     public function productRatingShort(Product $product, ManagerRegistry $doctrine)
     {
         $product_repository = $doctrine->getRepository(Product::class);
 
-
-        $count = count($product->getComments());
-        if($count === 0)
-            $average_rating = 0;
-        else
-            $average_rating = ($product_repository->getCommentsCountByRating($product, 1) * 1 +
-                               $product_repository->getCommentsCountByRating($product, 2) * 2 +
-                               $product_repository->getCommentsCountByRating($product, 3) * 3+
-                               $product_repository->getCommentsCountByRating($product, 4) * 4+
-                               $product_repository->getCommentsCountByRating($product, 5) * 5)/ $count;
-
+        $avg_rating = $product_repository->getAvgRating($product);
 
         return $this->render('default/_rating_short.html.twig', [
-            'rating' => floor($average_rating)
+            'rating' => floor($avg_rating)
         ]);  
     }
-
 
 }

@@ -229,6 +229,20 @@ class ProductRepository extends ServiceEntityRepository
         return $query->getSingleScalarResult();
     }
 
+
+    public function getAvgRating(Product $product)
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT AVG(c) FROM App\Entity\Comment c
+            WHERE c.product = (:product)'
+        )
+        ->setParameter('product', $product);
+
+        return $query->getSingleScalarResult();
+    }
+
+
     public function search($query, $offset, $limit)
     {
         return $this->createQueryBuilder('p')
