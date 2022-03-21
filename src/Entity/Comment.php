@@ -108,4 +108,14 @@ class Comment
 
         return $this;
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->getName(),
+            'created' => $this->getCreated()->format('d/m/y'),
+            'rating' => $this->getRating(),
+            'text' => $this->getText(),
+        ];
+    }
 }

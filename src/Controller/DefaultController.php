@@ -44,17 +44,6 @@ class DefaultController extends AbstractController
         ]);    
     }
 
-
-
-    public function commentRatingShort(Comment $comment, ManagerRegistry $doctrine)
-    {
-        $rating = $comment->getRating();
-
-        return $this->render('default/_rating_short.html.twig', [
-            'rating' => $rating,
-        ]);  
-    }
-
     public function categoryListTabSwitchers(ManagerRegistry $doctrine)
     {
         $categories = $doctrine->getRepository(Category::class)->findBy(['Parent'=>null]);

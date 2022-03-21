@@ -17,7 +17,6 @@ use App\Utils\Utils;
 class ProductController extends AbstractController
 {
 
-    //Todo: split into multiple controllers
     public function product(int $id, ManagerRegistry $doctrine, Utils $utils)
     {
         // getting all the necessary repositories
@@ -60,6 +59,8 @@ class ProductController extends AbstractController
                               $count_of_comments_with_four_star * 4 +
                               $count_of_comments_with_five_star * 5) / $sum_of_ratings;
         }
+
+        $average_rating = number_format($average_rating, 2);
 
         $floored_rating = floor($average_rating);
 

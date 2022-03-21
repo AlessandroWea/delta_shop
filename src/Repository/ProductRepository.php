@@ -234,7 +234,7 @@ class ProductRepository extends ServiceEntityRepository
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
-            'SELECT AVG(c) FROM App\Entity\Comment c
+            'SELECT AVG(c.rating) FROM App\Entity\Comment c
             WHERE c.product = (:product)'
         )
         ->setParameter('product', $product);

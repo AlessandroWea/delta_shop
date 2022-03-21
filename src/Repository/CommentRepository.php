@@ -45,7 +45,34 @@ class CommentRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
+
+    public function getByProduct($product, $offset, $limit)
+    {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT c
+            FROM App\Entity\Comment c
+            WHERE c.product = :prod
+            '
+        )
+        ->setParameter('prod', $product)
+        ->setFirstResult($offset)
+        ->setMaxResults($limit);
+        
+        return $query->getResult();
+
+    }
+
+    public function getCountByProduct($product)
+    {
+        return $this->createQueryBuilder('c')
+                    ->select('count(c)')
+                    ->where('c.product = :prod')
+                    ->setParameter('prod', $product)
+                    ->getQuery()
+                    ->getSingleScalarResult();
+    }
+
     //  * @return Comment[] Returns an array of Comment objects
     //  */
     /*
