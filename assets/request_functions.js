@@ -19,3 +19,21 @@ export function sendRequestJSON(method, url, body = null)
         })
     })
 }
+
+export function sendRequest(method, url, body = null)
+{
+     return fetch(url, {
+            method: method,
+            body: body ? body : null,
+        }).then(response => {
+            if(response.ok){
+                return response.json()
+            }
+
+            return response.json().then(error => {
+                const e = new Error('Smth went wrong')
+                e.data = error
+                throw e;
+            })
+        })   
+}
