@@ -3,11 +3,19 @@
 namespace App\Form;
 
 use App\Entity\Orders;
-use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Form\CallbackTransformer;
 
 class OrderFormType extends AbstractType
 {
@@ -16,13 +24,29 @@ class OrderFormType extends AbstractType
         $builder
             ->add('status', HiddenType::class)
             ->add('sessionId',HiddenType::class)
-            ->add('price')
-            ->add('quantity')
-            ->add('customer_name')
-            ->add('email')
-            ->add('phone', TextType::class, [
-                'label' => 'Telephone',
-            ]
+            //->add('price')
+            //->add('quantity')
+            ->add('customer_name', TextType::class, [
+                'label' => 'Enter your fullname'
+            ])
+            ->add('email', EmailType::class, [
+                'label' => 'Enter your email',
+                'required' => true,
+                'attr' => [
+                    'class' => 'form-control',
+                    'autofocus' => 'autofocus',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please fill the field'
+                    ]),
+                    new Email([
+                        'message' => 'Please enter a valid email'
+                    ])
+                ]
+            ])
+            ->add('phone', TelType::class, [
+                    'label' => 'Enter your phone number']
         )
 
         ;

@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Cart;
 use App\Entity\Product;
+use App\Form\CommentFormType;
+use App\Form\OrderFormType;
+use App\Form\RegistrationFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +15,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Repository\CartRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
+
+
+
 
 
 class CartController extends AbstractController
@@ -82,10 +88,11 @@ class CartController extends AbstractController
     {
         $session = $this->session->getId();
         $items = $cartRepository->findBy(['sessionId' => $session]);
+        $form = $this->createForm(OrderFormType::class);
         return $this->render(
             'order/order.html.twig',
             [
-
+                'formOrder' => $form->createView(),
                 'items' => $items,
             ]
         );
@@ -96,9 +103,12 @@ class CartController extends AbstractController
      * @Route("/cart/clear", name="cartClear")
      */
 
-    public function cartClear() //Clear session
+    public function cartClear(): \Symfony\Component\HttpFoundation\RedirectResponse //Clear session
     {
         $this->session->migrate();
         return $this->redirectToRoute('cart');
     }
+
+
+
 }
