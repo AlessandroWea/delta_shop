@@ -2,39 +2,41 @@
     <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
         <i class="fa fa-shopping-cart"></i>
         <span>Your Cart</span>
-        <div class="qty">3</div>
+        {% set count = 0 %}
+        {% for item in items %}
+            {% set count = count + item|length %}
+            <div class="qty">{{ count }}</div>
+        {% endfor %}
     </a>
     <div class="cart-dropdown">
-        <div class="cart-list">
-            <div class="product-widget">
-                <div class="product-img">
-                    <img src="./img/product01.png" alt="">
-                </div>
-                <div class="product-body">
-                    <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                    <h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-                </div>
-                <button class="delete"><i class="fa fa-close"></i></button>
-            </div>
 
-            <div class="product-widget">
-                <div class="product-img">
-                    <img src="./img/product02.png" alt="">
+        <div class="cart-list">
+            {% set count = 0 %}
+            {% set sum = 0 %}
+            {% for item in items %}
+                <div class="product-widget">
+                    <div class="product-img">
+                        <img src="{{ sonata_path(item.product.image, 'small') }}" alt="">
+                    </div>
+                    <div class="product-body">
+                        <h3 class="product-name"><a
+                                    href="{{ path('product', {id: item.product.id}) }}">{{ item.product.name }}</a></h3>
+                        <h4 class="product-price"><span class="qty">1x</span>${{ item.product.price }}</h4>
+                    </div>
+                    <button class="delete"><a href="{{ path('cartModClear')}}"><i class="fa fa-close"></i></a></button>
                 </div>
-                <div class="product-body">
-                    <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                    <h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-                </div>
-                <button class="delete"><i class="fa fa-close"></i></button>
-            </div>
+                {% set sum = sum + item.product.price %}
+                {% set count = count + item|length %}
+            {% endfor %}
+
         </div>
         <div class="cart-summary">
-            <small>3 Item(s) selected</small>
-            <h5>SUBTOTAL: $2940.00</h5>
+            <small>{{ count }} Item(s) selected</small>
+            <h5>SUBTOTAL: ${{ sum }}</h5>
         </div>
         <div class="cart-btns">
-            <a href="{{ path('cart')}}">View Cart</a>
-            <a href="{{ path('order')}}">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="{{ path('cart') }}">View Cart</a>
+            <a href="{{ path('order') }}">Checkout <i class="fa fa-arrow-circle-right"></i></a>
         </div>
     </div>
 </div>

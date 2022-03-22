@@ -57,7 +57,9 @@
                         <!-- /Wishlist -->
 
                         <!-- Cart -->
-                        {% include('default/_cart.html.twig') %}
+                        {{
+                        render(controller('App\\Controller\\CartModController::cartMod'))
+                        }}
                         <!-- will change to render controller later -->
                         <!-- /Cart -->
 
