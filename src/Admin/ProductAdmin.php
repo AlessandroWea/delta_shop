@@ -11,6 +11,14 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\MediaBundle\Form\Type\MediaType;
 use Sonata\AdminBundle\Form\Type\AdminType;
+use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
+use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Form\Type\ChoiceFieldMaskType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+use App\Entity\Category;
+
+use App\Repository\CategoryRepository;
 
 final class ProductAdmin extends AbstractAdmin
 {
@@ -59,7 +67,17 @@ final class ProductAdmin extends AbstractAdmin
                     //...
                 )))
             ->add('price')
-            ->add('category')
+            ->add('category', EntityType::class , [
+                'class' => Category::class ,
+                'query_builder' => function (CategoryRepository $repo){
+                    return $repo->createQueryBuilder('c')
+                        ->orderBy('c.position', 'ASC');
+                },
+                'choice_label' => function($category){
+                    return $category->getLeveledName();
+                },
+                
+            ])
             ->add('image', MediaType::class, [
                 'provider' => 'sonata.media.provider.image',
                 'context'  => 'product',
