@@ -12,6 +12,7 @@ use App\Entity\Category;
 use App\Entity\Product;
 
 use App\Utils\PageSettings;
+use App\Utils\ProductListFilter;
 
 class SearchController extends AbstractController
 {
@@ -32,7 +33,7 @@ class SearchController extends AbstractController
         $order = $request->query->get('orderBy') ?? 'Default';
         $number_of_products_per_page = $request->query->get('count') ?? PageSettings::DEFAULT_NUMBER_OF_PRODUCTS_PER_PAGE;
 
-        $valid = PageSettings::validate([
+        $valid = ProductListFilter::validate([
             'count_option' => $number_of_products_per_page,
             'order_option' => $order,
         ]);
@@ -40,24 +41,17 @@ class SearchController extends AbstractController
         // throw an exception if one of GET-variables is not valid
         if(!$valid) throw $this->createNotFoundException('The page does not exist');      
 
-        // if(!in_array($number_of_products_per_page, PageSettings::getCountOptions()) || !in_array($order, PageSettings::getOrderOptions()))
-        //     throw $this->createNotFoundException('The page does not exist');      
-
         $offset = $number_of_products_per_page * ($page - 1);
+
+        $options = [
+            'order' => $order,
+        ];
 
         // search in all categories
         if($category_id == 0)
         {
-            if($order === 'Default')
-            {
-                $products = $product_repository->search($query, $offset, $number_of_products_per_page);
-            }
-            else if($order === 'Newest')
-            {
-                $products = $product_repository->searchNewest($query, $offset, $number_of_products_per_page);
-            }
-
-            $number_of_products = $product_repository->searchCount($query);
+            $products = $product_repository->search($query, $offset, $number_of_products_per_page, $options);
+            $number_of_products = $product_repository->searchCount($query, $options);
         }
         //search in particular categories
         else
@@ -65,16 +59,8 @@ class SearchController extends AbstractController
             $category_of_search = $category_repository->find($category_id);
             $sub_category_ids = $category_repository->getAllLastSubCategoryIds($category_of_search);
 
-            if($order === 'Default')
-            {
-                $products = $product_repository->searchByCategoryIds($query, $sub_category_ids, $offset, $number_of_products_per_page);
-            }
-            else if($order === 'Newest')
-            {
-                $products = $product_repository->searchNewestByCategoryIds($query, $sub_category_ids, $offset, $number_of_products_per_page);
-            }
-
-            $number_of_products = $product_repository->searchCountByCategoryIds($query, $sub_category_ids);
+            $products = $product_repository->searchByCategoryIds($query, $sub_category_ids, $offset, $number_of_products_per_page, $options);
+            $number_of_products = $product_repository->searchCountByCategoryIds($query, $sub_category_ids, $options);
         }
 
 
@@ -95,8 +81,8 @@ class SearchController extends AbstractController
             'number_of_products_per_page' => $number_of_products_per_page,
             'number_of_pages' => $number_of_pages,
 
-            'count_options' => PageSettings::getCountOptions(),
-            'order_options' => PageSettings::getOrderOptions(),
+            'count_options' => ProductListFilter::getCountOptions(),
+            'order_options' => ProductListFilter::getOrderOptions(),
 
             'current_page' => $page,
             'current_order' => $order,

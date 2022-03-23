@@ -11,6 +11,9 @@ use Doctrine\Persistence\ManagerRegistry;
 use DoctrineExtensions\Query\Mysql\Rand;
 
 use Doctrine\ORM\Query\ResultSetMapping;
+
+use App\Utils\ProductListFilter;
+
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
  * @method Product|null findOneBy(array $criteria, array $orderBy = null)
@@ -77,22 +80,7 @@ class ProductRepository extends ServiceEntityRepository
         return array_reverse($categories);
     }
 
-    public function getProductsByCategories(array $categories, $offset = 0 ,$limit = 1)
-    {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-            'SELECT p
-            FROM App\Entity\Product p
-            WHERE p.category IN (:cat)
-            '
-        )
-        ->setParameter('cat', $categories)
-        ->setFirstResult($offset)
-        ->setMaxResults($limit);
-        
-        // returns an array of Product objects
-        return $query->getResult();
-    }
+
 
     public function getRecentProductsByCategories(array $categories, $offset = 0, $limit = 1) : array
     {
@@ -197,36 +185,78 @@ class ProductRepository extends ServiceEntityRepository
 
     }
 
-    public function getAll($offset, $limit)
+    public function getProductsByCategories(array $categories, $offset = 0 ,$limit = 1, array $options = [])
     {
         $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-            'SELECT p FROM App\Entity\Product p'
-        )
-        ->setFirstResult($offset)
-        ->setMaxResults($limit);
+        $query = $entityManager->createQueryBuilder('p')
+            ->select('p')
+            ->from('App\Entity\Product', 'p')
+            ->where('p.category IN (:cat)')
+            ->setParameter('cat', $categories)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
 
-        return $query->getResult();
+            $this->applyFilters($query, $options);
+        // $this->applyFilters($query, [
+        //     'order' => 'High price',
+        //     'priceMin' => '300',
+        //     'priceMax' => '200000',
+        // ]);
+        
+        // returns an array of Product objects
+        return $query->getQuery()->getResult();
     }
 
-    public function getCountOfAllProducts()
+    public function getAllByCategories(array $categories, $offset = 0 ,$limit = 1, array $options = [])
     {
-        return $this->createQueryBuilder('p')
+        $entityManager = $this->getEntityManager();
+        $builder = $entityManager->createQueryBuilder('p')
+            ->select('p')
+            ->from('App\Entity\Product', 'p')
+            ->where('p.category IN (:cat)')
+            ->setParameter('cat', $categories)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        ProductListFilter::applyFilters($builder, $options);
+        
+        // returns an array of Product objects
+        return $builder->getQuery()->getResult();
+    }
+
+    public function getAll(int $offset, int $limit, array $options = [])
+    {
+        $entityManager = $this->getEntityManager();
+
+        $builder = $this->createQueryBuilder('p')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        ProductListFilter::applyFilters($builder, $options);
+
+        return $builder->getQuery()->getResult();
+    }
+
+    public function getCountOfAllProducts(array $options)
+    {
+        $builder = $this->createQueryBuilder('p')
+            ->select('count(p.id)');
+
+        ProductListFilter::applyFilters($builder, $options);
+
+        return $builder->getQuery()->getSingleScalarResult();
+    }
+
+    public function getCountOfProductsByCategoryIds(array $ids, array $options)
+    {
+        $builder = $this->createQueryBuilder('p')
             ->select('count(p.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
+            ->where('p.category IN (:ids)')
+            ->setParameter('ids', $ids);
 
-    public function getCountOfProductsByCategoryIds(array $ids)
-    {
-        $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-            'SELECT count(p) FROM App\Entity\Product p
-            WHERE p.category IN (:ids)'
-        )
-        ->setParameter('ids', $ids);
+        ProductListFilter::applyFilters($builder, $options);
 
-        return $query->getSingleScalarResult();
+        return $builder->getQuery()->getSingleScalarResult();
     }
 
 
@@ -243,103 +273,58 @@ class ProductRepository extends ServiceEntityRepository
     }
 
 
-    public function search($query, $offset, $limit)
+    public function search($query, $offset, $limit, $options)
     {
-        return $this->createQueryBuilder('p')
+        $builder = $this->createQueryBuilder('p')
                     ->where('p.name LIKE :query')
                     ->setParameter('query', '%' . $query . '%')
                     ->setFirstResult($offset)
-                    ->setMaxResults($limit)
-                    ->getQuery()
-                    ->getResult();
+                    ->setMaxResults($limit);
+
+        ProductListFilter::applyFilters($builder, $options);
+
+        return $builder->getQuery()->getResult();
     }
 
-    public function searchCount($query)
+    public function searchCount($query, $options)
     {
-        return $this->createQueryBuilder('p')
+        $builder = $this->createQueryBuilder('p')
                     ->select('count(p)')
                     ->where('p.name LIKE :query')
-                    ->setParameter('query', '%' . $query . '%')
-                    ->getQuery()
-                    ->getSingleScalarResult();
+                    ->setParameter('query', '%' . $query . '%');
+
+        ProductListFilter::applyFilters($builder, $options); 
+
+        return $builder->getQuery()->getSingleScalarResult();
     }
 
-    public function searchNewest($query, $offset, $limit)
+    public function searchByCategoryIds($query, $ids ,$offset, $limit, $options)
     {
-        return $this->createQueryBuilder('p')
-                    ->where('p.name LIKE :query')
-                    ->setParameter('query', '%' . $query . '%')
-                    ->orderBy('p.created', 'DESC')
-                    ->setFirstResult($offset)
-                    ->setMaxResults($limit)
-                    ->getQuery()
-                    ->getResult();
-    }
-
-    public function searchByCategoryIds($query, $ids ,$offset, $limit)
-    {
-        return $this->createQueryBuilder('p')
+        $builder = $this->createQueryBuilder('p')
                     ->where('p.name LIKE :query')
                     ->andWhere('p.category IN (:ids)')
                     ->setParameter('query', '%' . $query . '%')
                     ->setParameter('ids', $ids)
                     ->setFirstResult($offset)
-                    ->setMaxResults($limit)
-                    ->getQuery()
-                    ->getResult();
+                    ->setMaxResults($limit);
+
+        ProductListFilter::applyFilters($builder, $options);
+        
+        return $builder->getQuery()->getResult();
     }
 
-    public function searchCountByCategoryIds($query, $ids)
+    public function searchCountByCategoryIds($query, $ids, $options)
     {
-        return $this->createQueryBuilder('p')
+        $builder = $this->createQueryBuilder('p')
                     ->select('count(p)')
                     ->where('p.name LIKE :query')
                     ->andWhere('p.category IN (:ids)')
                     ->setParameter('query', '%' . $query . '%')
-                    ->setParameter('ids', $ids)
-                    ->getQuery()
-                    ->getSingleScalarResult();
+                    ->setParameter('ids', $ids);
+
+        ProductListFilter::applyFilters($builder, $options);
+
+        return $builder->getQuery()->getSingleScalarResult();
     }
 
-    public function searchNewestByCategoryIds($query, $ids, $offset, $limit)
-    {
-        return $this->createQueryBuilder('p')
-                    ->where('p.name LIKE :query')
-                    ->andWhere('p.category IN (:ids)')
-                    ->orderBy('p.created', 'DESC')
-                    ->setParameter('query', '%' . $query . '%')
-                    ->setParameter('ids', $ids)
-                    ->setFirstResult($offset)
-                    ->setMaxResults($limit)
-                    ->getQuery()
-                    ->getResult();
-    }
-    // /**
-    //  * @return Product[] Returns an array of Product objects
-    //  */
-    
-    // public function findByExampleField($value)
-    // {
-    //     return $this->createQueryBuilder('p')
-    //         ->andWhere('p.exampleField = :val')
-    //         ->setParameter('val', $value)
-    //         ->orderBy('p.id', 'ASC')
-    //         ->setMaxResults(10)
-    //         ->getQuery()
-    //         ->getResult()
-    //     ;
-    // }
-    
-
-    /*
-    public function findOneBySomeField($value): ?Product
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -15,6 +15,7 @@ use App\Entity\Category;
 
 use App\Utils\Utils;
 use App\Utils\PageSettings;
+use App\Utils\ProductListFilter;
 
 class CategoryController extends AbstractController
 {
@@ -30,7 +31,7 @@ class CategoryController extends AbstractController
         $order = $request->query->get('orderBy') ?? 'Default';
         $number_of_products_per_page = $request->query->get('count') ?? PageSettings::DEFAULT_NUMBER_OF_PRODUCTS_PER_PAGE;
 
-        $valid = PageSettings::validate([
+        $valid = ProductListFilter::validate([
             'count_option' => $number_of_products_per_page,
             'order_option' => $order,
         ]);
@@ -42,33 +43,22 @@ class CategoryController extends AbstractController
 
         //if category is not found -> display all products
         $current_category = $category_repository->find($id);
+
+        $options = [
+            'order' => $order,
+        ];
+
         if($current_category === null)
         {
-            if($order === 'Default')
-            {
-                $products = $product_repository->getAll($offset, $number_of_products_per_page);
-            }
-            else if($order === 'Newest')
-            {
-                $products = $product_repository->getRecentProducts($offset, $number_of_products_per_page);
-            }
-
-            $number_of_products = $product_repository->getCountOfAllProducts();
+            $products = $product_repository->getAll($offset, $number_of_products_per_page, $options);
+            $number_of_products = $product_repository->getCountOfAllProducts($options);
         }
         else // display products of particular category or categories
         {
             $sub_category_ids = $category_repository->getAllLastSubCategoryIds($current_category);
 
-            if($order === 'Default')
-            {
-                $products = $product_repository->getProductsByCategories($sub_category_ids, $offset, $number_of_products_per_page);
-            }
-            else if($order === 'Newest')
-            {
-                $products = $product_repository->getRecentProductsByCategories($category_repository->findByIds($sub_category_ids), $offset, $number_of_products_per_page);
-            }
-
-            $number_of_products = $product_repository->getCountOfProductsByCategoryIds($sub_category_ids);
+            $products = $product_repository->getAllByCategories($sub_category_ids, $offset, $number_of_products_per_page, $options);
+            $number_of_products = $product_repository->getCountOfProductsByCategoryIds($sub_category_ids, $options);
         }
         
         $number_of_pages = (int)ceil($number_of_products / $number_of_products_per_page);
@@ -95,8 +85,8 @@ class CategoryController extends AbstractController
             'number_of_products_per_page' => $number_of_products_per_page,
             'number_of_pages' => $number_of_pages,
 
-            'count_options' => PageSettings::getCountOptions(),
-            'order_options' => PageSettings::getOrderOptions(),
+            'count_options' => ProductListFilter::getCountOptions(),
+            'order_options' => ProductListFilter::getOrderOptions(),
 
             'current_page' => $current_page,
             'current_order' => $order,
