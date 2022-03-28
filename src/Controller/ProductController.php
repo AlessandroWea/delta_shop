@@ -7,20 +7,43 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Request;
 
 use App\Entity\Product;
 use App\Entity\Comment;
 use App\Entity\Category;
 
 use App\Utils\Utils;
+use App\Form\AddToCartType;
+use App\Manager\CartManager;
+use App\Repository\ProductRepository;
 
 class ProductController extends AbstractController
 {
 
-    public function product(int $id, ManagerRegistry $doctrine, Utils $utils)
+    public function product(int $id, ProductRepository $product_repository, ManagerRegistry $doctrine, Utils $utils, Request $request,  CartManager $cart_manager)
     {
+        $form = $this->createForm(AddToCartType::class);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+            //add new item
+            $item = $form->getData();
+            $item->setProduct($product_repository->find($id));
+            $item->setPrice($product_repository->find($id)->getPrice());
+            // dd($item);
+            $cart = $cart_manager->getCurrentCart();
+            $cart->addItem($item);
+
+            $cart_manager->save($cart);
+
+            return $this->redirectToRoute('product', [
+                'id' => $id,
+            ]);
+        }
         // getting all the necessary repositories
-        $product_repository = $doctrine->getRepository(Product::class);
+        // $product_repository = $doctrine->getRepository(Product::class);
         $comment_repository = $doctrine->getRepository(Comment::class);
         $category_repository = $doctrine->getRepository(Category::class);
 
@@ -73,6 +96,8 @@ class ProductController extends AbstractController
         }
 
         return $this->render('product/product.html.twig', [
+            'add_to_cart_form' => $form->createView(),
+
             'product' => $product,
             'comments' => $comments,
             'product_categories' => $product_categories,

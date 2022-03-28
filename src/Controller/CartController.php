@@ -16,98 +16,47 @@ use App\Repository\CartRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 
-
-
-
+use App\Form\CartType;
+use App\Manager\CartManager;
+use App\Entity\Order;
 
 class CartController extends AbstractController
 {
-    private SessionInterface $session;
-
-    /**
-     * IndexController constructor.
-     * @param SessionInterface $session
-     */
-    public function __construct(SessionInterface $session)
-    {
-        $this->session = $session;
-        $this->session->start();
-    }
-
-
-    /**
-     * @Route("cart/add/{id<\d+>}", name="cartAdd")
-     *
-     * @param Product $product
-     * @param EntityManagerInterface $em
-     * @return Response
-     */
-    public function cartAdd(Product $product, EntityManagerInterface $em): Response
-    {
-        $sessionId = $this->session->getId();
-
-        $cart = (new Cart())
-            ->setProduct($product)
-            ->setCount(1)
-            ->setSessionId($sessionId);
-
-        $em->persist($cart);
-        $em->flush();
-
-        return $this->redirectToRoute('product', ['id' => $product->getId()]);
-    }
-
     /**
      * @Route("/cart", name="cart")
-     * @param CartRepository $cartRepository
-     * @return Response
      */
-    public function cart(CartRepository $cartRepository): Response
+    public function index(CartManager $cart_manager, Request $request): Response
     {
-        $session = $this->session->getId();
-        $items = $cartRepository->findBy(['sessionId' => $session]);
+        $cart = $cart_manager->getCurrentCart();
+        $form = $this->createForm(CartType::class, $cart);
+        $form->handleRequest($request);
 
-        return $this->render(
-            'order/cart.html.twig',
-            [
-                'title' => 'Cart',
-                'items' => $items,
-            ]
-        );
+        if($form->isSubmitted() && $form->isValid()){
+            $cart->setUpdatedAt(new \DateTime());
+            $cart_manager->save($cart);
+
+            return $this->redirectToRoute('cart');
+        }
+
+        return $this->render('order/cart.html.twig', [
+            'cart' => $cart,
+            'form' => $form->createView(),
+        ]);
     }
 
-
-    /**
-     * @Route("/order", name="order")
-     * @param CartRepository $cartRepository
-     * @return Response
-     */
-
-    public function orderGetProduct(CartRepository $cartRepository): Response
+    public function cartPreview(CartManager $cart_manager, ManagerRegistry $doctrine)
     {
-        $session = $this->session->getId();
-        $items = $cartRepository->findBy(['sessionId' => $session]);
-        $form = $this->createForm(OrderFormType::class);
-        return $this->render(
-            'order/order.html.twig',
-            [
-                'formOrder' => $form->createView(),
-                'items' => $items,
-            ]
-        );
+        $cart = $cart_manager->getCurrentCart();
 
+        $order_repository = $doctrine->getRepository(Order::class);
+
+        $items = $order_repository->getFirstItems($cart);
+        $total_count_of_items = $cart->getTotalQuantity();
+
+        return $this->render('order/_cart_preview.html.twig', [
+            'items' => $items,
+            'total_count_of_items' => $total_count_of_items,
+            'total_price' => $cart->getTotal(),
+        ]);
     }
-
-    /**
-     * @Route("/cart/clear", name="cartClear")
-     */
-
-    public function cartClear(): \Symfony\Component\HttpFoundation\RedirectResponse //Clear session
-    {
-        $this->session->migrate();
-        return $this->redirectToRoute('cart');
-    }
-
-
-
 }

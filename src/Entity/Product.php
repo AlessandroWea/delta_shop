@@ -52,12 +52,6 @@ class Product
      */
     private $created;
 
-
-    /**
-     * @ORM\OneToMany(targetEntity=ProductsToOrders::class, mappedBy="products")
-     */
-    private $products;
-
     /**
      * @ORM\OneToOne(targetEntity=SonataMediaMedia::class, cascade={"persist", "remove"})
      */
@@ -72,8 +66,6 @@ class Product
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-        $this->productsToOrders = new ArrayCollection();
-        $this->products = new ArrayCollection();
     }
 
     public function __toString()
@@ -188,36 +180,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, ProductsToOrders>
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(ProductsToOrders $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setProducts($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(ProductsToOrders $product): self
-    {
-        if ($this->products->removeElement($product)) {
-            // set the owning side to null (unless already changed)
-            if ($product->getProducts() === $this) {
-                $product->setProducts(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getGallery(): ?SonataMediaGallery
     {
         return $this->gallery;
@@ -229,37 +191,5 @@ class Product
 
         return $this;
     }
-
-    /**
-     * @return Collection|Cart[]
-     */
-    public function getCarts(): Collection
-    {
-        return $this->carts;
-    }
-
-    public function addCart(Cart $cart): self
-    {
-        if (!$this->carts->contains($cart)) {
-            $this->carts[] = $cart;
-            $cart->setProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCart(Cart $cart): self
-    {
-        if ($this->carts->contains($cart)) {
-            $this->carts->removeElement($cart);
-            // set the owning side to null (unless already changed)
-            if ($cart->getProduct() === $this) {
-                $cart->setProduct(null);
-            }
-        }
-
-        return $this;
-    }
-
 
 }

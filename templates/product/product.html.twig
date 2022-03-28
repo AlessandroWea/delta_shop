@@ -76,16 +76,26 @@
 					</div>
 					<p>{{ product.description | raw }}</p>
 
-					<div class="add-to-cart">
+					<div class="add-to-cart"> 
+						{{ form_start(add_to_cart_form) }}
+						<!-- form starts here -->
 						<div class="qty-label">
 							Qty
 							<div class="input-number">
-								<input type="number">
+								{{ form_widget(add_to_cart_form.quantity) }}
+								<!-- <input type="number"> -->
 								<span class="qty-up">+</span>
 								<span class="qty-down">-</span>
 							</div>
 						</div>
-						<button class="add-to-cart-btn"><a href="{{ path('cartAdd', {id: product.id}) }}" ><i class="fa fa-shopping-cart"></i> add to cart</a></button>
+						{{ form_widget(add_to_cart_form.add, {
+							'attr' : {
+								'class' : 'add-to-cart-btn'
+							}
+						}) }}
+
+						{{ form_end(add_to_cart_form) }}
+						<!-- <button class="add-to-cart-btn"><a href="#" ><i class="fa fa-shopping-cart"></i> add to cart</a></button> -->
 					</div>
 
 					<ul class="product-links">

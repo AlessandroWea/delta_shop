@@ -17,13 +17,20 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
+use App\Factory\OrderFactory;
+use App\Storage\CartSessionStorage;
+use App\Manager\CartManager;
+
 class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    private $cartManger;
+
+    public function __construct(EmailVerifier $emailVerifier, CartManager $cart_manager)
     {
         $this->emailVerifier = $emailVerifier;
+        $this->cartManger = $cart_manager;
     }
 
     /**
@@ -50,6 +57,11 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+            //get an anon cart and assign a new user to it
+            $cart = $this->cartManger->getCurrentCart();
+            $cart->setUser($user);
+            $cart->save();
 
             $this->addFlash('success', 'We sent you an email to verify your email address!');
 

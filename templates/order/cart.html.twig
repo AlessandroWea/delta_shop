@@ -3,73 +3,75 @@
 {% block title %}Cart{% endblock %}
 
 {% block section %}
-    {% if items is empty %}
-        <div class="container">
-            <!-- row -->
-            <div class="row">
-                <div class="col">
-                    <div class="cart">
-                        <h1>Your shopping cart is empty</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% else %}
-        {% set count = 0 %}
-        {% set sum = 0 %}
-        {% for item in items %}
-            <!-- container -->
-
-            <div class="container">
-                <!-- row -->
-                <div class="row">
-                    <div class="col">
-                        <div class="product-img">
-                            <img src="{{ sonata_path(item.product.image, 'small') }}" alt="">
-                            <!--             <div class="product-label">
-                                            <span class="sale">-30%</span>
-                                            <span class="new">NEW</span>
-                                        </div> -->
-                        </div>
-                        <div class="product-body">
-                            <h3 class="product-name"><a
-                                        href="{{ path('product', {id: item.product.id}) }}">{{ item.product.name }}</a>
-                            </h3>
-                            <p>{{ item.product.description | raw }}</p>
-                            <h4 class="product-price">${{ item.product.price }}
-                                <!-- <del class="product-old-price">$990.00</del> -->
-                            </h4>
-                            <div class="product-rating">
-                                {{ render(controller('App\\Controller\\ProductController::productRatingShort', {'product': item.product})) }}
+    <div class="container mt-4">
+        <h1>Your Cart</h1>
+        {% if cart.items.count > 0 %}
+            <div class="row mt-4">
+                <!-- List of items -->
+                <div class="col-md-8">
+                    {{ form_start(form) }}
+                    <div class="card">
+                        <div class="card-header bg-dark text-white d-flex">
+                            <h5>Items</h5>
+                            <div class="ml-auto">
+                                {{ form_widget(form.save, {'attr': {'class': 'btn btn-warning'}}) }}
+                                {{ form_widget(form.clear, {'attr': {'class': 'btn btn-light'}}) }}
                             </div>
                         </div>
+                        <ul class="list-group list-group-flush">
+                            {% for item in form.items %}
+                                <li class="list-group-item d-flex">
+                                    <div class="flex-fill mr-2">
+                                        <img src="{{ sonata_path(item.vars.data.product.image ,'small') }}" width="64" alt="Product image">
+                                    </div>
+                                    <div class="flex-fill mr-2">
+                                        <h5 class="mt-0 mb-0">{{ item.vars.data.product.name }}</h5>
+                                        <div class="form-inline mt-2">
+                                            <div class="form-group mb-0 mr-2">
+                                                {{ form_widget(item.quantity, {
+                                                    'attr': {
+                                                        'class': 'form-control form-control-sm ' ~ (item.quantity.vars.valid ? '' : 'is-invalid')
+                                                    }
+                                                }) }}
+                                                <div class="invalid-feedback">
+                                                    {{ form_errors(item.quantity) }}
+                                                </div>
+                                            </div>
+                                            {{ form_widget(item.remove, {'attr': {'class': 'btn btn-dark btn-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="flex-fill mr-2 text-right">
+                                        <b>{{ item.vars.data.product.price }} €</b>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {{ form_rest(form) }}
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
+
+                <!-- Summary -->
+                <div class="col-md-4">
+                    <div class="card mt-4 mt-md-0">
+                        <h5 class="card-header bg-dark text-white">Summary</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <div><b>Total</b></div>
+                                <span><b>{{ cart.total }} €</b></span>
+                            </li>
+                        </ul>
+                        <div class="card-body">
+                            <a href="#" class="btn btn-warning w-100">Checkout</a>
+                        </div>
                     </div>
                 </div>
+
             </div>
-            <hr>
-
-            {% set sum = sum + item.product.price %}
-            {% set count = count + item|length %}
-        {% endfor %}
-
-        <div class="container">
-            <!-- row -->
-            <div class="row">
-                <div class="col-md-12">
-                    <hr>
-                    <h3>Subtotal: ${{ sum }}</h3>
-                    <h4>Items selected: {{ count }}</h4>
-                    <a href="{{ path('order') }}" class="float-right btn btn-success mt-2">Place order</a>
-                    <button class="add-to-cart-btn"><a href="{{ path('cartClear')}}" ><i class="fa fa-shopping-cart"></i>Clear cart</a></button>
-                </div>
+        {% else %}
+            <div class="alert alert-info">
+                Your cart is empty. Go to the <a href="{{ path('homepage') }}">product list</a>.
             </div>
-        </div>
-
-    {% endif %}
-
+        {% endif %}
+    </div>
 {% endblock %}
-
-
-
-
-
