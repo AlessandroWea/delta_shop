@@ -2,20 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Cart;
-use App\Repository\CartRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use App\Entity\Product;
-use App\Entity\Comment;
 use App\Entity\Category;
-
-use App\Utils\Utils;
 
 class MainController extends AbstractController
 {

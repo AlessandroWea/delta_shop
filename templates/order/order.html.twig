@@ -88,7 +88,6 @@
                             <div><strong>TOTAL</strong></div>
                         </div>
 
-                        {% set sum = 0 %}
                         {% for item in items %}
                             <div class="order-products">
                             <div class="order-col">
@@ -96,7 +95,6 @@
                                 <div>{{ item.product.price }}</div>
                             </div>
                         </div>
-                            {% set sum = sum + item.product.price %}
                         {% endfor %}
                         <div class="order-col">
                             <div>Shiping</div>
@@ -104,7 +102,7 @@
                         </div>
                         <div class="order-col">
                             <div><strong>TOTAL</strong></div>
-                            <div><strong class="order-total">${{ sum }}</strong></div>
+                            <div><strong class="order-total">$</strong></div>
                         </div>
                     </div>
 

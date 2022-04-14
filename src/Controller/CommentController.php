@@ -7,12 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Comment;
 
 use App\Form\CommentFormType;
-
-use App\Entity\Product;
 
 use App\Repository\CommentRepository;
 

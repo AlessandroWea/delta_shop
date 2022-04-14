@@ -17,8 +17,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
-use App\Factory\OrderFactory;
-use App\Storage\CartSessionStorage;
 use App\Manager\CartManager;
 
 class RegistrationController extends AbstractController

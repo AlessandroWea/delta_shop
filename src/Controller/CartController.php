@@ -2,19 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Cart;
-use App\Entity\Product;
-use App\Form\CommentFormType;
-use App\Form\OrderFormType;
-use App\Form\RegistrationFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use App\Repository\CartRepository;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\ORM\EntityManagerInterface;
 
 use App\Form\CartType;
 use App\Manager\CartManager;
